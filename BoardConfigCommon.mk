@@ -52,6 +52,7 @@ TARGET_RECOVERY_PRE_COMMAND := "touch /cache/recovery/boot;sync;"
 BOARD_HAS_NO_MISC_PARTITION := true
 BOARD_USES_RECOVERY_CHARGEMODE := false
 BOARD_CUSTOM_GRAPHICS := ../../../device/semc/msm7x30-common/recovery/graphics.c
+BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/semc/msm7x30-common/recovery/recovery_ui.c
 
 BOARD_KERNEL_CMDLINE := console=null
 BOARD_KERNEL_BASE := 0x00200000
