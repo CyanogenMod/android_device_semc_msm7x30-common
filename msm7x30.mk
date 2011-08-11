@@ -52,8 +52,5 @@ PRODUCT_PACKAGES += \
     libOmxVdec \
     com.android.future.usb.accessory
 
-# semc msm7x30 uses high-density artwork where available
-PRODUCT_LOCALES += hdpi
-
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
