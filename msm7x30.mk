@@ -29,17 +29,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf
 
-#Offline charging animation
-PRODUCT_COPY_FILES += \
-    device/semc/msm7x30-common/prebuilt/animations/charging_animation_01.png:system/semc/chargemon/data/charging_animation_01.png \
-    device/semc/msm7x30-common/prebuilt/animations/charging_animation_02.png:system/semc/chargemon/data/charging_animation_02.png \
-    device/semc/msm7x30-common/prebuilt/animations/charging_animation_03.png:system/semc/chargemon/data/charging_animation_03.png \
-    device/semc/msm7x30-common/prebuilt/animations/charging_animation_04.png:system/semc/chargemon/data/charging_animation_04.png \
-    device/semc/msm7x30-common/prebuilt/animations/charging_animation_05.png:system/semc/chargemon/data/charging_animation_05.png \
-    device/semc/msm7x30-common/prebuilt/animations/charging_animation_06.png:system/semc/chargemon/data/charging_animation_06.png \
-    device/semc/msm7x30-common/prebuilt/animations/charging_animation_07.png:system/semc/chargemon/data/charging_animation_07.png \
-    device/semc/msm7x30-common/prebuilt/animations/charging_animation_blank.png:system/semc/chargemon/data/charging_animation_blank.png
-
 PRODUCT_PACKAGES += \
     librs_jni \
     gralloc.msm7x30 \
