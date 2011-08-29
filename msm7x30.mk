@@ -35,15 +35,6 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/dnsmasq.conf:system/etc/wifi/dnsmasq.conf
 
 
-## Adreno 200 files
-PRODUCT_COPY_FILES += \
-device/semc/msm7x30-common/prebuilt/libgsl.so:system/lib/libgsl.so \
-device/semc/msm7x30-common/prebuilt/libGLESv1_CM_adreno200.so:system/lib/egl/libGLESv1_CM_adreno200.so \
-device/semc/msm7x30-common/prebuilt/libq3dtools_adreno200.so:system/lib/egl/libq3dtools_adreno200.so \
-device/semc/msm7x30-common/prebuilt/libEGL_adreno200.so:system/lib/egl/libEGL_adreno200.so \
-device/semc/msm7x30-common/prebuilt/libGLESv2_adreno200.so:system/lib/egl/libGLESv2_adreno200.so
-
-
 PRODUCT_PACKAGES += \
 hostap\
     librs_jni \
