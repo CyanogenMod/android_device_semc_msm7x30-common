@@ -23,7 +23,6 @@ TARGET_ARCH_VARIANT := armv7-a-neon
 ARCH_ARM_HAVE_TLS_REGISTER := true
 
 BOARD_USES_GENERIC_AUDIO := false
-TARGET_PROVIDES_LIBAUDIO := true
 
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_FM_RADIO := true
@@ -45,7 +44,6 @@ BOARD_USE_FRAMEBUFFER_ALPHA_CHANNEL := true
 BOARD_USE_SCREENCAP := true
 BOARD_OVERLAY_FORMAT_YCbCr_420_SP := true
 BOARD_OVERLAY_MINIFICATION_LIMIT := 2
-BOARD_NO_RGBX_8888 := true
 
 BOARD_CUSTOM_BOOTIMG_MK := device/semc/msm7x30-common/custombootimg.mk
 TARGET_RECOVERY_PRE_COMMAND := "touch /cache/recovery/boot;sync;"
@@ -63,3 +61,4 @@ BOARD_SDCARD_INTERNAL_DEVICE := /dev/block/mmcblk0p1
 # A custom ota package maker for a device without a boot partition
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/semc/msm7x30-common/releasetools/semc_ota_from_target_files
 
+WITH_DEXPREOPT := true

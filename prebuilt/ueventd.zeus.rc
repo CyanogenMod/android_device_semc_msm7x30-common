@@ -1,0 +1,42 @@
+/dev/msm_rotator          0660   system     graphics
+/dev/msm_vidc_dec         0660   system     audio
+/dev/msm_vidc_enc         0660   system     audio
+/dev/msm_vidc_reg         0660   system     audio
+/dev/gemini0              0660   system     system
+/dev/msm_vpe              0660   system     system
+/dev/pmem_swiqi           0660   system     graphics
+/dev/bma250               0640   compass    system
+/dev/msm_aac*             0660   system     audio
+/dev/usb_accessory        0660   root       usb
+# video encoder on 720p-enabled 8k targets
+/dev/pmem_venc            0660   system     audio
+/sys/devices/virtual/usb_composite/*   enable      0664  root   system
+/dev/oncrpc/30000017:00010000   0660    radio   radio
+/dev/oncrpc/30000000:00070000   0660    radio   radio
+/dev/oncrpc/30000016:00020000   0660    radio   radio
+/dev/oncrpc/3000003c:00020000   0660    radio   radio
+/dev/oncrpc/30000019:00020000   0660    radio   radio
+/dev/oncrpc/3000000e:00080000   0660    radio   radio
+/dev/oncrpc/30000012:00020000   0660    radio   radio
+/dev/oncrpc/30000003:00010000   0660    radio   radio
+/dev/oncrpc/3000001b:00020000   0660    radio   radio
+/dev/oncrpc/30000000:00130000   0660    radio   radio
+/dev/oncrpc/30000003:00020000   0660    radio   radio
+/dev/oncrpc/3000000e:00090000   0660    radio   radio
+/dev/oncrpc/30000012:00040000   0660    radio   radio
+/dev/oncrpc/30000016:00040000   0660    radio   radio
+/dev/oncrpc/30000019:00060000   0660    radio   radio
+/dev/oncrpc/3000001b:00040000   0660    radio   radio
+/dev/oncrpc/3000003c:00060000   0660    radio   radio
+/dev/oncrpc/30000017:00010000   0660    radio   radio
+/dev/oncrpc/30000000:*          0660    radio   radio
+/dev/oncrpc/30000016:*		0660    radio   radio
+/dev/oncrpc/3000003c:*		0660    radio   radio
+/dev/oncrpc/30000019:*		0660    radio   radio
+/dev/oncrpc/3000000e:*		0660    radio   radio
+/dev/oncrpc/30000012:*		0660    radio   radio
+/dev/oncrpc/30000003:*          0660    radio   radio
+/dev/oncrpc/3000001b:*		0660    radio   radio
+/dev/oncrpc/3000006b:*          0660    radio   system
+/sys/devices/i2c-0/0-0040/leds/* delay_on  0644 system system
+/sys/devices/i2c-0/0-0040/leds/* delay_off 0644 system system

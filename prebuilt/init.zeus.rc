@@ -1,0 +1,153 @@
+on early-boot
+    exec /sbin/bootrec
+
+
+on boot
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
+
+    # QMUD / QMI keeps its sockets in here
+    mkdir /data/radio 0770 radio radio
+
+    mkdir /data/misc/wifi 0770 wifi wifi
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    mkdir /data/misc/dhcp 0770 dhcp dhcp
+
+    chown dhcp system /data/misc/dhcp
+
+    mkdir /data/idd 0755 idd idd
+    mount yaffs2 mtd@appslog /data/idd nosuid nodev
+    chown idd idd /data/idd
+    chmod 0755 /data/idd
+
+    mkdir /data/tombstones 0755 system system
+    mkdir /data/semc-checkin 0700 system system
+    mkdir /data/crashsms 0711 system system
+    mkdir /data/crashsms/crashes 0755 system system
+
+    # bluetooth power up/down interface
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chmod 0660                /sys/class/rfkill/rfkill0/state
+
+    # bluetooth MAC address programming
+    chown bluetooth bluetooth /proc/bt_mac_addr		# is this necessary?
+    setprop ro.bt.bdaddr_path /proc/bt_mac_addr
+
+    # Permissions for Liblights.
+    chown system system /sys/class/leds/green/brightness
+    chown system system /sys/class/leds/green/trigger
+    chown system system /sys/class/leds/red/brightness
+    chown system system /sys/class/leds/red/trigger
+    chown system system /sys/class/leds/blue/brightness
+    chown system system /sys/class/leds/blue/trigger
+    chown system system /sys/class/leds/button-backlight/brightness
+    chown system system /sys/class/leds/lcd-backlight/brightness
+
+    # enable the GPS
+    setprop ro.ril.def.agps.mode 2
+
+    # performance tweaks for flash
+    write /sys/block/mtdblock1/bdi/read_ahead_kb 4
+    write /sys/block/mtdblock2/bdi/read_ahead_kb 4
+    write /sys/block/mtdblock3/bdi/read_ahead_kb 4
+
+    # Wakelock debug
+    write /sys/module/wakelock/parameters/debug_mask 7
+
+    # Better power-management
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
+    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold 90
+    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/sampling_rate 75000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 245760
+
+    # Fix permissions for KGSL
+    chmod 0666                /dev/kgsl-2d0
+    chmod 0666                /dev/kgsl-3d0
+
+    # Fix permissions for Audio
+    chmod 0666	      /dev/snd/timer
+    chmod 0666	      /dev/snd/controlC0
+    chmod 0666	      /dev/snd/pcmC0D0c
+    chmod 0666	      /dev/snd/pcmC0D0p
+
+    # Fix permissions for bma150 (accelerometer)
+    chown system system /sys/devices/i2c-0/0-0038/rate
+
+    # Create the directories and files expected by the lcatp service
+    # only found in eng builds.
+    # Preferably the ONLY_IN_VARIANT macro should be used but
+    # seems like the build system does not parse this file properly.
+#    mkdir /data/misc/tsce 0770 system system
+#    write /data/misc/tsce/userfile.txt 0
+#    write /data/misc/tsce/userfile2.txt 0
+#    write /data/misc/tsce/logfile.txt 0
+#    chown system system /data/misc/tsce/userfile.txt
+#    chown system system /data/misc/tsce/userfile2.txt
+#    chown system system /data/misc/tsce/logfile.txt
+#    chmod 0660 /data/misc/tsce/userfile.txt
+#    chmod 0660 /data/misc/tsce/userfile2.txt
+#    chmod 0660 /data/misc/tsce/logfile.txt
+#    chmod 0666 /dev/mtp
+
+    # create data/drm directory
+    mkdir /data/drm 0774 drm drm
+    chown drm drm /data/drm
+    chmod 0774 /data/drm
+
+service drm /system/bin/drmserver
+    user drm
+    group system root inet
+
+service drmio /system/bin/drmioserver
+    user drmio
+
+service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -c/data/misc/wifi/wpa_supplicant.conf
+#   we will start as root and wpa_supplicant will switch to user wifi
+#   after setting up the capabilities required for WEXT
+#   user wifi
+#   group wifi inet keystore
+    socket wpa_eth0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+
+service dhcpcd_eth0 /system/bin/dhcpcd -BK -t 30
+    disabled
+    oneshot
+
+service hciattach /system/bin/brcm_patchram_plus --enable_hci --enable_lpm --baudrate 3000000 --patchram /system/etc/firmware/bcm4329.hcd /dev/ttyHS0 \
+    user bluetooth
+    group bluetooth net_bt_admin
+    disabled
+
+service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0 &
+    disabled
+    oneshot
+
+service qmuxd /system/bin/qmuxd
+
+service akmd8975 /system/bin/akmd8975
+
+service hw_config /system/bin/sh /system/etc/hw_config.sh
+    user root
+    oneshot
+
+service lidswitchd /system/bin/lidswitchd
+
+# Net mgr
+service netmgrd /system/bin/netmgrd -E
+
+on property:ro.use_data_netmgrd=false
+    # netmgr not supported on specific target
+    stop netmgrd
+
+service nvcustomizer /system/bin/nvcustomizer
+    user root
+    oneshot
+
+# Copy calibration data from NV to kernel drivers
+service nvimport /system/bin/nvimport
+    user root
+    oneshot
+
+service slidercounter /system/bin/slidercounter keypad-zeus
