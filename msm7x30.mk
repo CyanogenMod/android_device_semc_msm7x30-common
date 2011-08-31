@@ -32,8 +32,8 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/filler:root/filler \
     device/semc/msm7x30-common/prebuilt/10dnsconf:system/etc/init.d/10dnsconf \
     device/semc/msm7x30-common/prebuilt/10hostapconf:system/etc/init.d/10hostapconf \
+    device/semc/msm7x30-common/prebuilt/10cpmodules:system/etc/init.d/10cpmodules \
     device/semc/msm7x30-common/prebuilt/dnsmasq.conf:system/etc/wifi/dnsmasq.conf
-
 
 PRODUCT_PACKAGES += \
 hostap\

@@ -1,0 +1,16 @@
+#!/system/bin/sh
+#
+#copy wifi modules from kernel to system
+
+mount -o rw,remount -t yaffs2 /dev/block/mtdblock0 /system
+mkdir -p /system/lib/modules/
+
+MODULES="sdi.ko tiwlan_drv.ko tiap_drv.ko bcm4329.ko"
+
+for i in $MODULES
+do
+    cp /modules/$i /system/lib/modules >/dev/null 2>&1
+done
+
+exit 0
+
