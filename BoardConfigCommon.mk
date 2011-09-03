@@ -25,8 +25,11 @@ ARCH_ARM_HAVE_TLS_REGISTER := true
 BOARD_USES_GENERIC_AUDIO := false
 
 BOARD_HAVE_BLUETOOTH := true
-BOARD_HAVE_FM_RADIO := true
-BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
+# We don't support FM temporarily as the libaudio fm parts
+# are HTC specific for now.
+#
+# BOARD_HAVE_FM_RADIO := true
+# BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
 
 BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QCOM_GPS := true
