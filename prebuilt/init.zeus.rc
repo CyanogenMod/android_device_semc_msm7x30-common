@@ -54,11 +54,11 @@ on boot
     # Wakelock debug
     write /sys/module/wakelock/parameters/debug_mask 7
 
-    # Better power-management
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
-    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold 90
-    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/sampling_rate 75000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 245760
+#    # Better power-management
+#    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
+#    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold 90
+#    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/sampling_rate 75000
+#    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 245760
 
     # Fix permissions for KGSL
     chmod 0666                /dev/kgsl-2d0
