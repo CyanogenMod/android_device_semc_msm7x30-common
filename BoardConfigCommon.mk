@@ -42,7 +42,6 @@ BOARD_EGL_CFG := device/semc/msm7x30-common/prebuilt/egl.cfg
 BOARD_USE_FRAMEBUFFER_ALPHA_CHANNEL := true
 
 BOARD_USE_SCREENCAP := true
-BOARD_OVERLAY_FORMAT_YCbCr_420_SP := true
 BOARD_OVERLAY_MINIFICATION_LIMIT := 2
 
 BOARD_CUSTOM_BOOTIMG_MK := device/semc/msm7x30-common/custombootimg.mk
