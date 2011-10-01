@@ -161,6 +161,7 @@ static int set_light_buttons (struct light_device_t *dev, struct light_state_t c
 }
 
 void reset_shared_lights_locked (char const*const led_file, char const*const trigger_file) {
+  LOGE("%s: E reset_shared_lights_locked",__func__);
 	write_int (RED_LED_FILE, 0);
 	write_int (GREEN_LED_FILE, 0);
 	write_int (BLUE_LED_FILE, 0);
@@ -172,7 +173,7 @@ void reset_shared_lights_locked (char const*const led_file, char const*const tri
 	if (led_file)
 		write_int (led_file, 255);
 	if (trigger_file)
-		write_string (led_file, "timer");
+		write_string (trigger_file, "timer");
 }
 
 static void set_shared_light_locked (struct light_device_t *dev, struct light_state_t *state) {
