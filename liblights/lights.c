@@ -172,7 +172,7 @@ void reset_shared_lights_locked (char const*const led_file, char const*const tri
 	if (led_file)
 		write_int (led_file, 255);
 	if (trigger_file)
-		write_string (led_file, "timer");
+		write_string (trigger_file, "timer");
 }
 
 static void set_shared_light_locked (struct light_device_t *dev, struct light_state_t *state) {
