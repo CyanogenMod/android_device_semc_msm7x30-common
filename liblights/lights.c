@@ -152,69 +152,27 @@ static int set_light_buttons (struct light_device_t *dev, struct light_state_t c
 	return 0;
 }
 
-void reset_shared_lights_locked (char const*const led_file, char const*const trigger_file) {
-	write_int (RED_LED_FILE, 0);
-	write_int (GREEN_LED_FILE, 0);
-	write_int (BLUE_LED_FILE, 0);
-
-	write_string (RED_LED_FILE_TRIGGER, "none");
-	write_string (GREEN_LED_FILE_TRIGGER, "none");
-	write_string (BLUE_LED_FILE_TRIGGER, "none");
-
-	if (led_file)
-		write_int (led_file, 255);
-	if (trigger_file)
-		write_string (trigger_file, "timer");
-}
-
 static void set_shared_light_locked (struct light_device_t *dev, struct light_state_t *state) {
-	unsigned int colorRGB = state->color & 0xFFFFFF;
-	unsigned int color = LED_BLANK;
+	int r, g, b;
+	int err = 0;
 
-	if (colorRGB & 0xFF)
-		color = LED_BLUE;
-	if ((colorRGB >> 8)&0xFF)
-		color = LED_GREEN;
-	if ((colorRGB >> 16)&0xFF)
-		color = LED_RED;
+	r = (state->color >> 16) & 0xFF;
+	g = (state->color >> 8) & 0xFF;
+	b = (state->color) & 0xFF;
 
-	char *led_file = NULL;
-	char *led_file_trigger = NULL;
-
-	switch (state->flashMode) {
-		case LIGHT_FLASH_TIMED:
-			switch (color) {
-				case LED_RED:
-					reset_shared_lights_locked(RED_LED_FILE, RED_LED_FILE_TRIGGER);
-					break;
-				case LED_GREEN:
-					reset_shared_lights_locked(GREEN_LED_FILE, GREEN_LED_FILE_TRIGGER);
-					break;
-				case LED_BLUE:
-					reset_shared_lights_locked(BLUE_LED_FILE, BLUE_LED_FILE_TRIGGER);
-					break;
-				case LED_BLANK:
-					reset_shared_lights_locked(NULL, NULL);
-					break;
-			}
-			break;
-		case LIGHT_FLASH_NONE:
-			switch (color) {
-				case LED_RED:
-					reset_shared_lights_locked(RED_LED_FILE, NULL);
-					break;
-				case LED_GREEN:
-					reset_shared_lights_locked(GREEN_LED_FILE, NULL);
-					break;
-				case LED_BLUE:
-					reset_shared_lights_locked(BLUE_LED_FILE, NULL);
-					break;
-				case LED_BLANK:
-					reset_shared_lights_locked(NULL, NULL);
-					break;
-			}
-			break;
+	if (state->flashMode != LIGHT_FLASH_NONE) {
+		err = write_string (RED_LED_FILE_TRIGGER, "timer");
+		err = write_string (GREEN_LED_FILE_TRIGGER, "timer");
+		err = write_string (BLUE_LED_FILE_TRIGGER, "timer");
+	} else {
+		err = write_string (RED_LED_FILE_TRIGGER, "none");
+		err = write_string (GREEN_LED_FILE_TRIGGER, "none");
+		err = write_string (BLUE_LED_FILE_TRIGGER, "none");
 	}
+
+	err = write_int (RED_LED_FILE, r);
+	err = write_int (GREEN_LED_FILE, g);
+	err = write_int (BLUE_LED_FILE, b);
 }
 
 static void handle_shared_battery_locked (struct light_device_t *dev) {
