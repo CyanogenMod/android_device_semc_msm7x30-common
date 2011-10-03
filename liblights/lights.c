@@ -218,10 +218,10 @@ static void set_shared_light_locked (struct light_device_t *dev, struct light_st
 }
 
 static void handle_shared_battery_locked (struct light_device_t *dev) {
-	if (is_lit (&g_battery)) {
-		set_shared_light_locked (dev, &g_battery);
-	} else {
+	if (is_lit (&g_notification)) {
 		set_shared_light_locked (dev, &g_notification);
+	} else {
+		set_shared_light_locked (dev, &g_battery);
 	}
 }
 
