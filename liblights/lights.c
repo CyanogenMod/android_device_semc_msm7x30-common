@@ -30,6 +30,7 @@
 #include <sys/types.h>
 
 #include <hardware/lights.h>
+#include "lights.h"
 
 /* Synchronization primities */
 static pthread_once_t g_init = PTHREAD_ONCE_INIT;
@@ -40,20 +41,6 @@ static struct light_state_t g_notification;
 static struct light_state_t g_battery;
 
 static int g_backlight = 255;
-
-/* our led locations */
-char const*const RED_LED_FILE 			= "/sys/class/leds/red/brightness";
-char const*const GREEN_LED_FILE 		= "/sys/class/leds/green/brightness";
-char const*const BLUE_LED_FILE 			= "/sys/class/leds/blue/brightness";
-
-char const*const RED_LED_FILE_TRIGGER	= "/sys/class/leds/red/trigger";
-char const*const GREEN_LED_FILE_TRIGGER	= "/sys/class/leds/green/trigger";
-char const*const BLUE_LED_FILE_TRIGGER	= "/sys/class/leds/blue/trigger";
-
-char const*const BUTTON_BACKLIGHT_FILE	= "/sys/class/leds/button-backlight/brightness";
-char const*const LCD_BACKLIGHT_FILE		= "/sys/class/leds/lcd-backlight/brightness";
-
-char const*const ALS_FILE		= "/sys/class/leds/lcd-backlight/als/enable";
 
 /* The leds we have */
 enum {
@@ -151,10 +138,15 @@ static int set_light_backlight (struct light_device_t *dev, struct light_state_t
 }
 
 static int set_light_buttons (struct light_device_t *dev, struct light_state_t const* state) {
+	size_t i = 0;
 	int err = 0;
 	int on = is_lit(state);
 	pthread_mutex_lock(&g_lock);
-	err = write_int (BUTTON_BACKLIGHT_FILE,on?255:0);
+
+	for (i = 0; i < sizeof(BUTTON_BACKLIGHT_FILE)/sizeof(BUTTON_BACKLIGHT_FILE[0]); i++) {
+		err = write_int (BUTTON_BACKLIGHT_FILE[i],on?255:0);
+	}
+
 	pthread_mutex_unlock(&g_lock);
 
 	return 0;
