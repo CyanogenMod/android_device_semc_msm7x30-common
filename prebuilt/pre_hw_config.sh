@@ -6,4 +6,3 @@ echo 3000 > $dev/red/max_current
 echo 4500 > $dev/green/max_current
 echo 3000 > $dev/blue/max_current
 
-echo 1209600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
