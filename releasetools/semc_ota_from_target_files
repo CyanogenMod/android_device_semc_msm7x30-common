@@ -397,18 +397,15 @@ def WriteFullOTAPackage(input_zip, output_zip):
   symlinks = CopySystemFiles(input_zip, output_zip)
   script.MakeSymlinks(symlinks)
 
-  boot_img = common.File("boot.img", common.BuildBootableImage(
-      os.path.join(OPTIONS.input_tmp, "BOOT")))
-  recovery_img = common.File("recovery.img", common.BuildBootableImage(
-      os.path.join(OPTIONS.input_tmp, "RECOVERY")))
-
   if has_boot_partition:
     MakeRecoveryPatch(output_zip, recovery_img, boot_img)
 
   Item.GetMetadata(input_zip)
   Item.Get("system").SetPermissions(script)
 
-  common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
+  kernel_img = open(OPTIONS.device_out + '/boot.img','r')
+  common.ZipWriteStr(output_zip, "boot.img", kernel_img.read())
+  kernel_img.close()
 
   script.ShowProgress(0.2, 0)
 
@@ -767,7 +764,7 @@ def main(argv):
 
   print "unzipping target target-files..."
   OPTIONS.input_tmp = common.UnzipTemp(args[0])
-
+  OPTIONS.device_out = os.path.dirname(args[1])
   OPTIONS.target_tmp = OPTIONS.input_tmp
   input_zip = zipfile.ZipFile(args[0], "r")
   OPTIONS.info_dict = common.LoadInfoDict(input_zip)
