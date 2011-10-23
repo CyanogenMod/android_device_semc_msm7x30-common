@@ -65,5 +65,8 @@ hostap\
     libOmxVdec \
     com.android.future.usb.accessory
 
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.tethering.kb_disconnect=1
+
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
