@@ -14,6 +14,9 @@
 # limitations under the License.
 #
 PRODUCT_COPY_FILES += \
+    device/semc/msm7x30-common/prebuilt/clearpad.idc:system/usr/idc/clearpad.idc
+
+PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/base/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/base/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
@@ -28,13 +31,12 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
-    device/semc/msm7x30-common/prebuilt/recovery.fstab:root/recovery.fstab \
-    device/semc/msm7x30-common/prebuilt/filler:root/filler \
     device/semc/msm7x30-common/prebuilt/10dnsconf:system/etc/init.d/10dnsconf \
     device/semc/msm7x30-common/prebuilt/10hostapconf:system/etc/init.d/10hostapconf \
     device/semc/msm7x30-common/prebuilt/10cpmodules:system/etc/init.d/10cpmodules \
     device/semc/msm7x30-common/prebuilt/10setmaxspeed:system/etc/init.d/10setmaxspeed \
     device/semc/msm7x30-common/prebuilt/dnsmasq.conf:system/etc/wifi/dnsmasq.conf
+#    device/semc/msm7x30-common/prebuilt/filler:root/filler \
 
 #recovery resources
 PRODUCT_COPY_FILES += \
@@ -43,19 +45,27 @@ PRODUCT_COPY_FILES += \
     bootable/recovery/res/images/icon_clockwork.png:root/res/images/icon_clockwork.png \
     bootable/recovery/res/images/icon_error.png:root/res/images/icon_error.png \
     bootable/recovery/res/images/icon_installing.png:root/res/images/icon_installing.png \
-    bootable/recovery/res/images/indeterminate1.png:root/res/images/indeterminate1.png \
-    bootable/recovery/res/images/indeterminate2.png:root/res/images/indeterminate2.png \
-    bootable/recovery/res/images/indeterminate3.png:root/res/images/indeterminate3.png \
-    bootable/recovery/res/images/indeterminate4.png:root/res/images/indeterminate4.png \
-    bootable/recovery/res/images/indeterminate5.png:root/res/images/indeterminate5.png \
-    bootable/recovery/res/images/indeterminate6.png:root/res/images/indeterminate6.png \
+    bootable/recovery/res/images/icon_installing_overlay01.png:root/res/images/icon_installing_overlay01.png \
+    bootable/recovery/res/images/icon_installing_overlay02.png:root/res/images/icon_installing_overlay02.png \
+    bootable/recovery/res/images/icon_installing_overlay03.png:root/res/images/icon_installing_overlay03.png \
+    bootable/recovery/res/images/icon_installing_overlay04.png:root/res/images/icon_installing_overlay04.png \
+    bootable/recovery/res/images/icon_installing_overlay05.png:root/res/images/icon_installing_overlay05.png \
+    bootable/recovery/res/images/icon_installing_overlay06.png:root/res/images/icon_installing_overlay06.png \
+    bootable/recovery/res/images/icon_installing_overlay07.png:root/res/images/icon_installing_overlay07.png \
+    bootable/recovery/res/images/indeterminate01.png:root/res/images/indeterminate01.png \
+    bootable/recovery/res/images/indeterminate02.png:root/res/images/indeterminate02.png \
+    bootable/recovery/res/images/indeterminate03.png:root/res/images/indeterminate03.png \
+    bootable/recovery/res/images/indeterminate04.png:root/res/images/indeterminate04.png \
+    bootable/recovery/res/images/indeterminate05.png:root/res/images/indeterminate05.png \
+    bootable/recovery/res/images/indeterminate06.png:root/res/images/indeterminate06.png \
     bootable/recovery/res/images/progress_empty.png:root/res/images/progress_empty.png \
     bootable/recovery/res/images/progress_fill.png:root/res/images/progress_fill.png
 
 PRODUCT_PACKAGES += \
 hostap\
     librs_jni \
-    gralloc.msm7x30 \
+    gralloc.semc \
+    audio.primary.semc \
     overlay.default \
     screencap \
     gps.semc \
