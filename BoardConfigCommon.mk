@@ -65,5 +65,5 @@ BOARD_KERNEL_BASE := 0x00200000
 BOARD_RECOVERY_BASE := 0x00200000
 
 BOARD_SDCARD_INTERNAL_DEVICE := /dev/block/mmcblk0p1
-# A custom ota package maker for a device without a boot partition
-#TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/semc/msm7x30-common/releasetools/semc_ota_from_target_files
+# A custom ota package maker for a device without an exposed boot partition
+TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/semc/msm7x30-common/releasetools/semc_ota_from_target_files
