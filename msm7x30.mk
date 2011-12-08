@@ -29,6 +29,7 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/base/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
 
+#    device/semc/msm7x30-common/prebuilt/filler:root/filler \
 PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
     device/semc/msm7x30-common/prebuilt/10dnsconf:system/etc/init.d/10dnsconf \
@@ -36,7 +37,6 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/10cpmodules:system/etc/init.d/10cpmodules \
     device/semc/msm7x30-common/prebuilt/10setmaxspeed:system/etc/init.d/10setmaxspeed \
     device/semc/msm7x30-common/prebuilt/dnsmasq.conf:system/etc/wifi/dnsmasq.conf
-#    device/semc/msm7x30-common/prebuilt/filler:root/filler \
 
 #recovery resources
 PRODUCT_COPY_FILES += \
@@ -62,18 +62,26 @@ PRODUCT_COPY_FILES += \
     bootable/recovery/res/images/progress_fill.png:root/res/images/progress_fill.png
 
 PRODUCT_PACKAGES += \
-hostap\
-    librs_jni \
-    gralloc.semc \
+    gralloc.msm7x30 \
+    copybit.msm7x30 \
+    hwcomposer.msm7x30 \
     audio.primary.semc \
-    overlay.default \
-    screencap \
+    audio_policy.semc \
     gps.semc \
     lights.semc \
+    libgenlock \
+    libmemalloc \
+    liboverlay \
+    librs_jni \
+    screencap \
     libOmxCore \
     libOmxVenc \
     libOmxVdec \
-    com.android.future.usb.accessory
+    com.android.future.usb.accessory \
+    Superuser \
+    su
+#hostap\
+#    Usb \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.tethering.kb_disconnect=1

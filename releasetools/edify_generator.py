@@ -87,8 +87,10 @@ class EdifyGenerator(object):
 
   def AssertDevice(self, device):
     """Assert that the device identifier is the given string."""
-    cmd = ('assert(getprop("ro.product.device") == "%s" ||\0'
-           'getprop("ro.build.product") == "%s");' % (device, device))
+    cmd = ('assert(' + 
+           ' || \0'.join(['getprop("ro.product.device") == "%s" || getprop("ro.build.product") == "%s" || getprop("ro.product.board") == "%s"'
+                         % (i, i, i) for i in device.split(",")]) + 
+           ');')
     self.script.append(self._WordWrap(cmd))
 
   def AssertSomeBootloader(self, *bootloaders):
@@ -103,6 +105,16 @@ class EdifyGenerator(object):
     self.script.append('package_extract_file("system/bin/backuptool.sh", "/tmp/backuptool.sh");')
     self.script.append('set_perm(0, 0, 0777, "/tmp/backuptool.sh");')
     self.script.append(('run_program("/tmp/backuptool.sh", "%s");' % command))
+
+  def RunModelidCfg(self):
+    self.script.append('package_extract_file("system/bin/modelid_cfg.sh", "/tmp/modelid_cfg.sh");')
+    self.script.append('set_perm(0, 0, 0777, "/tmp/modelid_cfg.sh");')
+    self.script.append('run_program("/tmp/modelid_cfg.sh");')
+
+  def RunVerifyCachePartitionSize(self):
+    self.script.append('package_extract_file("system/bin/verify_cache_partition_size.sh", "/tmp/verify_cache_partition_size.sh");')
+    self.script.append('set_perm(0, 0, 0777, "/tmp/verify_cache_partition_size.sh");')
+    self.script.append('run_program("/tmp/verify_cache_partition_size.sh");')
 
   def ShowProgress(self, frac, dur):
     """Update the progress bar, advancing it over 'frac' over the next
@@ -166,13 +178,11 @@ class EdifyGenerator(object):
     """Format the given partition, specified by its mount point (eg,
     "/system")."""
 
-    reserve_size = 0
     fstab = self.info.get("fstab", None)
     if fstab:
       p = fstab[partition]
-      self.script.append('format("%s", "%s", "%s", "%s");' %
-                         (p.fs_type, common.PARTITION_TYPES[p.fs_type],
-                          p.device, p.length))
+      self.script.append('format("%s", "%s", "%s");' %
+                         (p.fs_type, common.PARTITION_TYPES[p.fs_type], p.device))
 
   def DeleteFiles(self, file_list):
     """Delete all files in file_list."""
@@ -194,6 +204,18 @@ class EdifyGenerator(object):
     cmd = "".join(cmd)
     self.script.append(self._WordWrap(cmd))
 
+  def WriteFirmwareImage(self, kind, fn):
+    """Arrange to update the given firmware image (kind must be
+    "hboot" or "radio") when recovery finishes."""
+    if self.version == 1:
+      self.script.append(
+          ('assert(package_extract_file("%(fn)s", "/tmp/%(kind)s.img"),\n'
+           '       write_firmware_image("/tmp/%(kind)s.img", "%(kind)s"));')
+          % {'kind': kind, 'fn': fn})
+    else:
+      self.script.append(
+          'write_firmware_image("PACKAGE:%s", "%s");' % (fn, kind))
+
   def WriteRawImage(self, mount_point, fn):
     """Write the given package file into the partition for the given
     mount point."""
@@ -205,14 +227,39 @@ class EdifyGenerator(object):
       args = {'device': p.device, 'fn': fn}
       if partition_type == "MTD":
         self.script.append(
-            'package_extract_file("%(fn)s", "/tmp/boot.img");'
-            'write_raw_image("/tmp/boot.img", "%(device)s");' % args
-            % args)
+            ('assert(package_extract_file("%(fn)s", "/tmp/%(device)s.img"),\n'
+             '       write_raw_image("/tmp/%(device)s.img", "%(device)s"),\n'
+             '       delete("/tmp/%(device)s.img"));') % args)
       elif partition_type == "EMMC":
         self.script.append(
             'package_extract_file("%(fn)s", "%(device)s");' % args)
+      elif partition_type == "BML":
+	        self.script.append(
+            ('assert(package_extract_file("%(fn)s", "/tmp/%(device)s.img"),\n'
+             '       write_raw_image("/tmp/%(device)s.img", "%(device)s"),\n'
+             '       delete("/tmp/%(device)s.img"));') % args)
       else:
         raise ValueError("don't know how to write \"%s\" partitions" % (p.fs_type,))
+
+    else:
+      # backward compatibility with older target-files that lack recovery.fstab
+      if self.info["partition_type"] == "MTD":
+        partition_type, partition = common.GetTypeAndDevice(mount_point, self.info)
+        self.script.append(
+            ('assert(package_extract_file("%(fn)s", "/tmp/%(partition)s.img"),\n'
+             '       write_raw_image("/tmp/%(partition)s.img", "%(partition)s"),\n'
+             '       delete("/tmp/%(partition)s.img"));')
+            % {'partition': partition, 'fn': fn})
+      elif self.info["partition_type"] == "EMMC":
+        partition_type, partition = common.GetTypeAndDevice(mount_point, self.info)
+        self.script.append(
+            ('package_extract_file("%(fn)s", "%(dir)s%(partition)s");')
+            % {'partition': partition, 'fn': fn,
+               'dir': self.info.get("partition_path", ""),
+               })
+      else:
+        raise ValueError("don't know how to write \"%s\" partitions" %
+                         (self.info["partition_type"],))
 
   def SetPermissions(self, fn, uid, gid, mode):
     """Set file ownership and permissions."""
@@ -233,20 +280,6 @@ class EdifyGenerator(object):
       cmd = ('symlink("%s", ' % (dest,) +
              ",\0".join(['"' + i + '"' for i in sorted(links)]) + ");")
       self.script.append(self._WordWrap(cmd))
-
-  def RetouchBinaries(self, file_list):
-    """Execute the retouch instructions in files listed."""
-    cmd = ('retouch_binaries(' +
-           ', '.join(['"' + i[0] + '", "' + i[1] + '"' for i in file_list]) +
-           ');')
-    self.script.append(self._WordWrap(cmd))
-
-  def UndoRetouchBinaries(self, file_list):
-    """Undo the retouching (retouch to zero offset)."""
-    cmd = ('undo_retouch_binaries(' +
-           ', '.join(['"' + i[0] + '", "' + i[1] + '"' for i in file_list]) +
-           ');')
-    self.script.append(self._WordWrap(cmd))
 
   def AppendExtra(self, extra):
     """Append text verbatim to the output script."""
