@@ -69,3 +69,5 @@ BOARD_RECOVERY_BASE := 0x00200000
 BOARD_SDCARD_INTERNAL_DEVICE := /dev/block/mmcblk0p1
 # A custom ota package maker for a device without an exposed boot partition
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/semc/msm7x30-common/releasetools/semc_ota_from_target_files
+
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
