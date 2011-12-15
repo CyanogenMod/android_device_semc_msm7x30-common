@@ -31,7 +31,6 @@ PRODUCT_COPY_FILES += \
 
 
 PRODUCT_COPY_FILES += \
-    device/semc/msm7x30-common/prebuilt/filler:root/filler \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
     device/semc/msm7x30-common/prebuilt/10dnsconf:system/etc/init.d/10dnsconf \
     device/semc/msm7x30-common/prebuilt/10hostapconf:system/etc/init.d/10hostapconf \
@@ -40,6 +39,7 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/init.semc.usb.rc:root/init.semc.usb.rc
 
 #    device/semc/msm7x30-common/prebuilt/10cpmodules:system/etc/init.d/10cpmodules \
+#    device/semc/msm7x30-common/prebuilt/filler:root/filler \
 
 #recovery resources
 PRODUCT_COPY_FILES += \
@@ -86,11 +86,37 @@ PRODUCT_PACKAGES += \
     libcyanogen-dsp\
     DSPManager \
     Gallery
-#hostap\
-#    Usb \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.tethering.kb_disconnect=1
 
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    rild.libpath=/system/lib/libril-qc-1.so \
+    rild.libargs=-d/dev/smd0 \
+    ro.ril.hsxpa=1 \
+    ro.ril.gprsclass=10 \
+    ro.telephony.default_network=0 \
+    ro.telephony.call_ring.multiple=false \
+    ro.telephony.ril_class=semc \
+    wifi.interface=wlan0 \
+    wifi.supplicant_scan_interval=15 \
+    keyguard.no_require_sim=true \
+    ro.com.google.locationfeatures=1 \
+    dalvik.vm.dexopt-flags=m=y \
+    dalvik.vm.dexopt-data-only=1 \
+    dalvik.vm.lockprof.threshold=500 \
+    dalvik.vm.execution-mode=int:jit \
+    dalvik.vm.checkjni=false \
+    dalvik.vm.heapsize=48m \
+    ro.opengles.version=131072  \
+    ro.compcache.default=0 \
+    ro.product.locale.language=en \
+    ro.product.locale.region=US \
+    persist.ro.ril.sms_sync_sending=1 \
+    ro.use_data_netmgrd=true \
+    hwui.render_dirty_regions=false \
+    BUILD_UTC_DATE=0 \
+    sys.usb.config=mtp,adb
