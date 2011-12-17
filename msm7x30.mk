@@ -35,11 +35,11 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/10dnsconf:system/etc/init.d/10dnsconf \
     device/semc/msm7x30-common/prebuilt/10hostapconf:system/etc/init.d/10hostapconf \
     device/semc/msm7x30-common/prebuilt/10setmaxspeed:system/etc/init.d/10setmaxspeed \
-    device/semc/msm7x30-common/prebuilt/dnsmasq.conf:system/etc/wifi/dnsmasq.conf \
-    device/semc/msm7x30-common/prebuilt/init.semc.usb.rc:root/init.semc.usb.rc
+    device/semc/msm7x30-common/prebuilt/dnsmasq.conf:system/etc/wifi/dnsmasq.conf
 
 #    device/semc/msm7x30-common/prebuilt/10cpmodules:system/etc/init.d/10cpmodules \
 #    device/semc/msm7x30-common/prebuilt/filler:root/filler \
+#    device/semc/msm7x30-common/prebuilt/init.semc.usb.rc:root/init.semc.usb.rc
 
 #recovery resources
 PRODUCT_COPY_FILES += \
@@ -80,12 +80,13 @@ PRODUCT_PACKAGES += \
     libOmxCore \
     libOmxVenc \
     libOmxVdec \
-    com.android.future.usb.accessory \
     Superuser \
     su \
     libcyanogen-dsp\
     DSPManager \
     Gallery
+
+#    com.android.future.usb.accessory \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.tethering.kb_disconnect=1
@@ -118,5 +119,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.ro.ril.sms_sync_sending=1 \
     ro.use_data_netmgrd=true \
     hwui.render_dirty_regions=false \
-    BUILD_UTC_DATE=0 \
-    sys.usb.config=mtp,adb
+    BUILD_UTC_DATE=0
+#    persist.sys.usb.config=adb
+#    sys.usb.config=mtp,adb
