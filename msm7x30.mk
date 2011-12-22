@@ -68,11 +68,13 @@ PRODUCT_PACKAGES += \
     gralloc.msm7x30 \
     copybit.msm7x30 \
     hwcomposer.msm7x30 \
-    audio.primary.semc \
-    audio_policy.semc \
+    audio.primary.msm7x30 \
+    audio_policy.msm7x30 \
     gps.semc \
     lights.semc \
     libgenlock \
+    libQcomUI \
+    libtilerenderer \
     libmemalloc \
     liboverlay \
     librs_jni \
@@ -82,11 +84,12 @@ PRODUCT_PACKAGES += \
     libOmxVdec \
     Superuser \
     su \
+    com.android.future.usb.accessory \
     libcyanogen-dsp\
     DSPManager \
+    CMSettings \
     Gallery
 
-#    com.android.future.usb.accessory \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.tethering.kb_disconnect=1
