@@ -42,9 +42,9 @@
 		_IOW(MSM_ROTATOR_IOCTL_MAGIC, 3, int)
 
 enum rotator_clk_type {
-	ROTATOR_AXI_CLK,
-	ROTATOR_PCLK,
-	ROTATOR_IMEM_CLK
+	ROTATOR_AXICLK_CLK,
+	ROTATOR_PCLK_CLK,
+	ROTATOR_IMEMCLK_CLK
 };
 
 struct msm_rotator_img_info {
@@ -74,6 +74,7 @@ struct msm_rotator_platform_data {
 	unsigned int number_of_clocks;
 	unsigned int hardware_version_number;
 	struct msm_rot_clocks *rotator_clks;
+	const char *regulator_name;
 };
 #endif
 

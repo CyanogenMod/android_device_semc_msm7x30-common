@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-PRODUCT_COPY_FILES += \
-    device/semc/msm7x30-common/prebuilt/clearpad.idc:system/usr/idc/clearpad.idc
 
 PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
@@ -31,13 +29,13 @@ PRODUCT_COPY_FILES += \
 
 
 PRODUCT_COPY_FILES += \
+    device/semc/msm7x30-common/prebuilt/fstab:root/fstab \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
     device/semc/msm7x30-common/prebuilt/10dnsconf:system/etc/init.d/10dnsconf \
     device/semc/msm7x30-common/prebuilt/10hostapconf:system/etc/init.d/10hostapconf \
     device/semc/msm7x30-common/prebuilt/10setmaxspeed:system/etc/init.d/10setmaxspeed \
     device/semc/msm7x30-common/prebuilt/dnsmasq.conf:system/etc/wifi/dnsmasq.conf
 
-#    device/semc/msm7x30-common/prebuilt/10cpmodules:system/etc/init.d/10cpmodules \
 #    device/semc/msm7x30-common/prebuilt/filler:root/filler \
 #    device/semc/msm7x30-common/prebuilt/init.semc.usb.rc:root/init.semc.usb.rc
 
@@ -105,6 +103,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.default_network=0 \
     ro.telephony.call_ring.multiple=false \
     ro.telephony.ril_class=semc \
+    ro.telephony.ril.v3=icccardstatus,skipbrokendatacall,datacall,signalstrength,facilitylock \
     wifi.interface=wlan0 \
     wifi.supplicant_scan_interval=15 \
     keyguard.no_require_sim=true \
@@ -122,6 +121,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.ro.ril.sms_sync_sending=1 \
     ro.use_data_netmgrd=true \
     hwui.render_dirty_regions=false \
-    BUILD_UTC_DATE=0
-#    persist.sys.usb.config=adb
-#    sys.usb.config=mtp,adb
+    BUILD_UTC_DATE=0 \
+    # qcom display \
+    debug.sf.hw = 1 \
+    debug.composition.type = c2d \
+    #debug.enabletr = true \
+    debug.qctwa.statusbar = 1 \
+    debug.qctwa.preservebuf = 1 \
+    # cm qcom build lub \
+    com.qc.hardware=true \
+    com.qc.hdmi_out=false
