@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+$(call inherit-product, frameworks/base/build/phone-hdpi-512-dalvik-heap.mk)
 
 PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
@@ -37,7 +38,6 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/dnsmasq.conf:system/etc/wifi/dnsmasq.conf
 
 #    device/semc/msm7x30-common/prebuilt/filler:root/filler \
-#    device/semc/msm7x30-common/prebuilt/init.semc.usb.rc:root/init.semc.usb.rc
 
 #recovery resources
 PRODUCT_COPY_FILES += \
@@ -76,7 +76,6 @@ PRODUCT_PACKAGES += \
     libmemalloc \
     liboverlay \
     librs_jni \
-    screencap \
     libOmxCore \
     libOmxVenc \
     libOmxVdec \
