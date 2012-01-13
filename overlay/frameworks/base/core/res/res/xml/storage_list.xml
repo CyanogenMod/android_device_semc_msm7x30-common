@@ -28,14 +28,17 @@
         emulated:   (boolean) the storage is emulated via the FUSE sdcard daemon
         mtpReserve: (integer) number of megabytes of storage MTP should reserve for free storage
                      (used for emulated storage that is shared with system's data partition)
+        allowMassStorage: (boolean) true if this volume can be shared via USB mass storage
+        maxFileSize: (integer) maximum file size in megabytes
 
       A storage should not have both emulated and removable set to true
 -->
 
 <StorageList xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- removable is not set in nosdcard product -->
     <storage android:mountPoint="/mnt/sdcard"
-    		 android:storageDescription="@string/storage_usb"
-    		 android:primary="true"
-    		 android:removable="true" />
+        android:storageDescription="@string/storage_usb"
+        android:primary="true"
+        android:allowMassStorage="true"
+        android:removable="true"
+        android:maxFileSize="4096" />
 </StorageList>

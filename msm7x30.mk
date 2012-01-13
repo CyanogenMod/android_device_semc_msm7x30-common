@@ -95,38 +95,36 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 PRODUCT_PROPERTY_OVERRIDES += \
+    ro.opengles.version=131072 \
     rild.libpath=/system/lib/libril-qc-1.so \
     rild.libargs=-d/dev/smd0 \
     ro.ril.hsxpa=1 \
     ro.ril.gprsclass=10 \
     ro.telephony.default_network=0 \
     ro.telephony.call_ring.multiple=false \
-    ro.telephony.ril_class=semc \
-    ro.telephony.ril.v3=icccardstatus,skipbrokendatacall,datacall,signalstrength,facilitylock \
+    ro.telephony.ril_class=SemcRIL \
+    ro.telephony.ril.v3=facilitylock,signalstrength,icccardstatus,datacall \
+    mobiledata.interfaces=gannet0,rmnet0,rmnet1,rmnet2 \
     wifi.interface=wlan0 \
     wifi.supplicant_scan_interval=15 \
     keyguard.no_require_sim=true \
     ro.com.google.locationfeatures=1 \
-    dalvik.vm.dexopt-flags=m=y \
-    dalvik.vm.dexopt-data-only=1 \
-    dalvik.vm.lockprof.threshold=500 \
-    dalvik.vm.execution-mode=int:jit \
-    dalvik.vm.checkjni=false \
-    dalvik.vm.heapsize=48m \
-    ro.opengles.version=131072  \
-    ro.compcache.default=0 \
     ro.product.locale.language=en \
     ro.product.locale.region=US \
     persist.ro.ril.sms_sync_sending=1 \
     ro.use_data_netmgrd=true \
-    hwui.render_dirty_regions=false \
+    debug.sf.hw=1 \
+    debug.composition.type=mdp \
+    debug.qctwa.statusbar=1 \
+    debug.qctwa.preservebuf=1 \
+    com.qc.hardware=truecom.qc.hdmi_out=false \
     BUILD_UTC_DATE=0 \
-    # qcom display \
-    debug.sf.hw = 1 \
-    debug.composition.type = c2d \
-    #debug.enabletr = true \
-    debug.qctwa.statusbar = 1 \
-    debug.qctwa.preservebuf = 1 \
-    # cm qcom build lub \
-    com.qc.hardware=true \
-    com.qc.hdmi_out=false
+
+#    dalvik.vm.dexopt-flags=m=y \
+#    dalvik.vm.dexopt-data-only=1 \
+#    dalvik.vm.lockprof.threshold=500 \
+#    dalvik.vm.execution-mode=int:jit \
+#    dalvik.vm.checkjni=false \
+#    dalvik.vm.heapsize=48m \
+#    ro.compcache.default=0 \
+#    hwui.render_dirty_regions=false \
