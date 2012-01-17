@@ -72,6 +72,7 @@ PRODUCT_PACKAGES += \
     audio_policy.msm7x30 \
     gps.semc \
     lights.semc \
+    camera.semc \
     libgenlock \
     libQcomUI \
     libtilerenderer \
@@ -107,7 +108,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.ril_class=SemcRIL \
     ro.telephony.ril.v3=facilitylock,signalstrength,icccardstatus,datacall \
     mobiledata.interfaces=gannet0,rmnet0,rmnet1,rmnet2 \
-    wifi.interface=wlan0 \
     wifi.supplicant_scan_interval=15 \
     keyguard.no_require_sim=true \
     ro.com.google.locationfeatures=1 \

@@ -35,6 +35,7 @@
 /dev/oncrpc/3000001b:*   0660   radio   radio
 /dev/oncrpc/3000006b:*   0660   radio   system
 /dev/ttyHS0              0660   bluetooth bluetooth
+/dev/msm_camera/*        0666   camera media
 /sys/devices/platform/msm_hsusb_host.0/usb* uevent 0660 root usb
 /sys/devices/virtual/input/input*   enable      0660  root   input
 /sys/devices/virtual/input/input*   poll_delay  0660  root   input
