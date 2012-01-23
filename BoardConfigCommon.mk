@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+TARGET_SPECIFIC_HEADER_PATH := device/semc/msm7x30-common/include
+
 TARGET_NO_BOOTLOADER := true
 
 TARGET_BOARD_PLATFORM := msm7x30
