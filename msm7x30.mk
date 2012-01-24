@@ -33,11 +33,7 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/ueventd.semc.rc:root/ueventd.semc.rc \
     device/semc/msm7x30-common/prebuilt/init.semc.usb.rc:root/init.semc.usb.rc \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
-    device/semc/msm7x30-common/prebuilt/10dnsconf:system/etc/init.d/10dnsconf \
-    device/semc/msm7x30-common/prebuilt/10hostapconf:system/etc/init.d/10hostapconf \
-    device/semc/msm7x30-common/prebuilt/10setmaxspeed:system/etc/init.d/10setmaxspeed \
-    device/semc/msm7x30-common/prebuilt/fstab:root/fstab \
-    device/semc/msm7x30-common/prebuilt/dnsmasq.conf:system/etc/wifi/dnsmasq.conf
+    device/semc/msm7x30-common/prebuilt/fstab:root/fstab
 #    device/semc/msm7x30-common/prebuilt/filler:root/filler \
 
 
@@ -73,6 +69,7 @@ PRODUCT_PACKAGES += \
     gps.semc \
     lights.semc \
     camera.semc \
+    sensors.semc \
     libgenlock \
     libQcomUI \
     libtilerenderer \
@@ -106,7 +103,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.default_network=0 \
     ro.telephony.call_ring.multiple=false \
     ro.telephony.ril_class=SemcRIL \
-    ro.telephony.ril.v3=facilitylock,signalstrength,icccardstatus,datacall \
     mobiledata.interfaces=gannet0,rmnet0,rmnet1,rmnet2 \
     wifi.supplicant_scan_interval=15 \
     keyguard.no_require_sim=true \
@@ -121,6 +117,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.qctwa.preservebuf=1 \
     com.qc.hardware=truecom.qc.hdmi_out=false \
     BUILD_UTC_DATE=0 \
+    persist.usb.sys.config=mtp,adb
 
 #    dalvik.vm.dexopt-flags=m=y \
 #    dalvik.vm.dexopt-data-only=1 \
@@ -130,3 +127,4 @@ PRODUCT_PROPERTY_OVERRIDES += \
 #    dalvik.vm.heapsize=48m \
 #    ro.compcache.default=0 \
 #    hwui.render_dirty_regions=false \
+#    ro.telephony.ril.v3=facilitylock,signalstrength,icccardstatus,datacall \
