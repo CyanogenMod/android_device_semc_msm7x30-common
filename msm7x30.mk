@@ -34,8 +34,8 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/init.semc.usb.rc:root/init.semc.usb.rc \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
     device/semc/msm7x30-common/prebuilt/fstab:root/fstab
-#    device/semc/msm7x30-common/prebuilt/filler:root/filler \
 
+    device/semc/msm7x30-common/prebuilt/filler:root/filler \
 
 #recovery resources
 PRODUCT_COPY_FILES += \
@@ -117,10 +117,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.qctwa.preservebuf=1 \
     com.qc.hardware=truecom.qc.hdmi_out=false \
     BUILD_UTC_DATE=0 \
+    hwui.render_dirty_regions=false \
+    hwui.disable_vsync=true \
     persist.usb.sys.config=mtp,adb
 
-#    dalvik.vm.dexopt-flags=m=y \
 #    dalvik.vm.dexopt-data-only=1 \
+
+#    dalvik.vm.dexopt-flags=m=y \
 #    dalvik.vm.lockprof.threshold=500 \
 #    dalvik.vm.execution-mode=int:jit \
 #    dalvik.vm.checkjni=false \
