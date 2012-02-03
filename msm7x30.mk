@@ -35,7 +35,7 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
     device/semc/msm7x30-common/prebuilt/fstab:root/fstab
 
-    device/semc/msm7x30-common/prebuilt/filler:root/filler \
+#    device/semc/msm7x30-common/prebuilt/filler:root/filler \
 
 #recovery resources
 PRODUCT_COPY_FILES += \
@@ -119,7 +119,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     BUILD_UTC_DATE=0 \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
-    persist.usb.sys.config=mtp,adb
+    persist.sys.usb.config=mtp,adb
 
 #    dalvik.vm.dexopt-data-only=1 \
 
