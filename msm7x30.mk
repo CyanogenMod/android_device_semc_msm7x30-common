@@ -37,6 +37,7 @@ PRODUCT_COPY_FILES += \
 
 #    device/semc/msm7x30-common/prebuilt/filler:root/filler \
 
+
 #recovery resources
 PRODUCT_COPY_FILES += \
     bootable/recovery/res/images/icon_firmware_error.png:root/res/images/icon_firmware_error.png \
@@ -103,7 +104,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.default_network=0 \
     ro.telephony.call_ring.multiple=false \
     ro.telephony.ril_class=SemcRIL \
-    mobiledata.interfaces=gannet0,rmnet0,rmnet1,rmnet2 \
     wifi.supplicant_scan_interval=15 \
     keyguard.no_require_sim=true \
     ro.com.google.locationfeatures=1 \
@@ -112,17 +112,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.ro.ril.sms_sync_sending=1 \
     ro.use_data_netmgrd=true \
     debug.sf.hw=1 \
-    debug.composition.type=mdp \
+    debug.composition.type=c2d \
     debug.qctwa.statusbar=1 \
     debug.qctwa.preservebuf=1 \
-    com.qc.hardware=truecom.qc.hdmi_out=false \
+    com.qc.hardware=truecom.qc.hdmi_out=true \
     BUILD_UTC_DATE=0 \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
     persist.sys.usb.config=mtp,adb
 
 #    dalvik.vm.dexopt-data-only=1 \
-
 #    dalvik.vm.dexopt-flags=m=y \
 #    dalvik.vm.lockprof.threshold=500 \
 #    dalvik.vm.execution-mode=int:jit \
@@ -131,3 +130,4 @@ PRODUCT_PROPERTY_OVERRIDES += \
 #    ro.compcache.default=0 \
 #    hwui.render_dirty_regions=false \
 #    ro.telephony.ril.v3=facilitylock,signalstrength,icccardstatus,datacall \
+#    mobiledata.interfaces=rmnet0,rmnet1,rmnet2 \
