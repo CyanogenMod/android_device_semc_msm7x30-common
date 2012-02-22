@@ -36,6 +36,14 @@
 /dev/oncrpc/3000006b:*   0660   radio   system
 /dev/ttyHS0              0660   bluetooth bluetooth
 /dev/msm_camera/*        0666   camera media
+/sys/devices/i2c-0/0-0053/flash_current 0666 system system
+/sys/devices/i2c-0/0-0053/flash_duration 0666 system system
+/sys/devices/i2c-0/0-0053/flash_enable 0666 system system
+/sys/devices/i2c-0/0-0053/flash_synchronization 0666 system system
+/sys/devices/i2c-0/0-0053/privacy_current 0666 system system
+/sys/devices/i2c-0/0-0053/privacy_enable 0666 system system
+/sys/devices/i2c-0/0-0053/torch_current 0666 system system
+/sys/devices/i2c-0/0-0053/torch_enable 0666 system system
 /sys/devices/platform/msm_hsusb_host.0/usb* uevent 0660 root usb
 /sys/devices/virtual/input/input*   enable      0660  root   input
 /sys/devices/virtual/input/input*   poll_delay  0660  root   input
