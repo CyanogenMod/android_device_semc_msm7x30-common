@@ -31,7 +31,6 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/ueventd.semc.rc:root/ueventd.semc.rc \
-    device/semc/msm7x30-common/prebuilt/init.semc.usb.rc:root/init.semc.usb.rc \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
     device/semc/msm7x30-common/prebuilt/fstab:root/fstab
 
