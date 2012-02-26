@@ -72,7 +72,29 @@ hostap\
     com.android.future.usb.accessory
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.tethering.kb_disconnect=1
+    ro.tethering.kb_disconnect=1 \
+    rild.libpath=/system/lib/libril-qc-1.so \
+    rild.libargs=-d/dev/smd0 \
+    ro.ril.hsxpa=1 \
+    ro.ril.gprsclass=10 \
+    ro.telephony.default_network=0 \
+    ro.telephony.call_ring.multiple=false \
+    ro.telephony.ril_class=semc \
+    wifi.supplicant_scan_interval=15 \
+    keyguard.no_require_sim=true \
+    ro.com.google.locationfeatures=1 \
+    dalvik.vm.dexopt-flags=m=y \
+    dalvik.vm.heapsize=48m \
+    dalvik.vm.lockprof.threshold=500 \
+    dalvik.vm.execution-mode=int:jit \
+    dalvik.vm.checkjni=false \
+    ro.opengles.version=131072  \
+    ro.compcache.default=0 \
+    ro.product.locale.language=en \
+    ro.product.locale.region=US \
+    persist.ro.ril.sms_sync_sending=1 \
+    ro.use_data_netmgrd=true \
+    BUILD_UTC_DATE=0
 
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
