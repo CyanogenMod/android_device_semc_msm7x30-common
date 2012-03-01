@@ -1,0 +1,24 @@
+DASH_SENSORS_CFLAGS += -Ikernel/include
+
+ifeq ($(SENSORS_ACCEL_BMA150_INPUT),true)
+DASH_SENSORS += bma150_input.c
+DASH_SENSORS_CFLAGS += -DACC_BMA150_INPUT
+endif
+
+ifeq ($(SENSORS_ACCEL_BMA250_INPUT),true)
+DASH_SENSORS += bma250_input.c
+DASH_SENSORS_CFLAGS += -DACC_BMA250_INPUT
+endif
+
+ifeq ($(SENSORS_COMPASS_AK897X),true)
+DASH_SENSORS += akm897x.c
+endif
+
+ifeq ($(SENSORS_PROXIMITY_APDS970X),true)
+DASH_SENSORS += apds970x.c
+endif
+
+ifeq ($(SENSORS_PRESSURE_BMP180),true)
+DASH_SENSORS += bmp180_input.c
+endif
+

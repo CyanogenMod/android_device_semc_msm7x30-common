@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-TARGET_SPECIFIC_HEADER_PATH := device/semc/msm7x30-common/include
-
 TARGET_NO_BOOTLOADER := true
 
 TARGET_BOARD_PLATFORM := msm7x30
@@ -42,6 +40,8 @@ BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 50000
 
 BOARD_EGL_CFG := device/semc/msm7x30-common/prebuilt/egl.cfg
 BOARD_USE_FRAMEBUFFER_ALPHA_CHANNEL := true
+
+BUILD_SEMC_SENSORS := true
 
 BOARD_USE_SCREENCAP := true
 BOARD_OVERLAY_MINIFICATION_LIMIT := 2
