@@ -114,7 +114,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.composition.type=c2d \
     debug.qctwa.statusbar=1 \
     debug.qctwa.preservebuf=1 \
-    com.qc.hardware=truecom.qc.hdmi_out=true \
+    com.qc.hardware=true \
+    com.qc.hdmi_out=true \
     BUILD_UTC_DATE=0 \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
