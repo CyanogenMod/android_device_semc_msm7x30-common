@@ -141,7 +141,6 @@ enum {
 #define MDP_SOURCE_ROTATED_90		0x00100000
 #define MDP_MEMORY_ID_TYPE_FB		0x00001000
 #define MDP_DPP_HSIC			0x00080000
-#define MDP_BORDERFILL_SUPPORTED        0x00010000
 
 #define MDP_TRANSP_NOP 0xffffffff
 #define MDP_ALPHA_NOP 0xff
@@ -235,9 +234,9 @@ struct msmfb_data {
 struct msmfb_overlay_data {
 	uint32_t id;
 	struct msmfb_data data;
-	uint32_t version_key;
+/*	uint32_t version_key;
 	struct msmfb_data plane1_data;
-	struct msmfb_data plane2_data;
+	struct msmfb_data plane2_data;*/
 };
 
 struct msmfb_img {
@@ -274,7 +273,7 @@ struct mdp_overlay {
 	uint32_t flags;
 	uint32_t id;
 	uint32_t user_data[8];
-	struct dpp_ctrl dpp;
+//	struct dpp_ctrl dpp;
 };
 
 struct msmfb_overlay_3d {
