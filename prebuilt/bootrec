@@ -1,0 +1,33 @@
+#!/sbin/sh
+setprop service.adb.root 1
+if [ -e /sbin/bootrec-device ]
+then
+  /sbin/bootrec-device
+fi
+
+if [ -s /dev/keycheck -o -e /cache/recovery/boot ]
+then
+  echo 0 > /sys/class/android_usb/android0/enable
+  restart adbd
+  echo 1 > /sys/class/android_usb/android0/enable
+
+  rm /cache/recovery/boot
+  mount -o remount,rw rootfs /
+  umount -l /system
+  umount -l /data
+  umount -l /cache
+  umount -l /mnt/sdcard
+  rm -r /sdcard
+  rm -r /not/sdcard
+  mkdir /sdcard
+  mkdir /tmp
+  rm /etc
+  mkdir /etc
+  cp /recovery.fstab /etc/recovery.fstab
+  mount /dev/block/mmcblk0p1 /sdcard
+  /sbin/recovery&
+fi
+
+/system/bin/chargemon
+#continue booting
+
