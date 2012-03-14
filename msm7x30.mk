@@ -66,6 +66,7 @@ hostap\
     screencap \
     gps.semc \
     lights.semc \
+    sensor.semc \
     libOmxCore \
     libOmxVenc \
     libOmxVdec \
