@@ -102,6 +102,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     rild.libargs=-d/dev/smd0 \
     ro.ril.hsxpa=1 \
     ro.ril.gprsclass=10 \
+    ro.ril.def.agps.mode=2 \
+    ro.ril.def.agps.feature=1 \
     ro.telephony.default_network=0 \
     ro.telephony.call_ring.multiple=false \
     ro.telephony.ril_class=SemcRIL \
@@ -122,3 +124,4 @@ PRODUCT_PROPERTY_OVERRIDES += \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
     persist.sys.usb.config=mtp,adb
+
