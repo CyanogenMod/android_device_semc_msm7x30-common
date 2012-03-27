@@ -120,14 +120,3 @@ PRODUCT_PROPERTY_OVERRIDES += \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
     persist.sys.usb.config=mtp,adb
-
-#    dalvik.vm.dexopt-data-only=1 \
-#    dalvik.vm.dexopt-flags=m=y \
-#    dalvik.vm.lockprof.threshold=500 \
-#    dalvik.vm.execution-mode=int:jit \
-#    dalvik.vm.checkjni=false \
-#    dalvik.vm.heapsize=48m \
-#    ro.compcache.default=0 \
-#    hwui.render_dirty_regions=false \
-#    ro.telephony.ril.v3=facilitylock,signalstrength,icccardstatus,datacall \
-#    mobiledata.interfaces=rmnet0,rmnet1,rmnet2 \
