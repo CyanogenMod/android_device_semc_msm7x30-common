@@ -15,6 +15,8 @@
 #
 $(call inherit-product, frameworks/base/build/phone-hdpi-512-dalvik-heap.mk)
 
+PRODUCT_MANUFACTURER := Sony
+
 PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/base/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
