@@ -78,9 +78,6 @@ PRODUCT_PACKAGES += \
     libmemalloc \
     liboverlay \
     librs_jni \
-    libOmxCore \
-    libOmxVenc \
-    libOmxVdec \
     Superuser \
     su \
     com.android.future.usb.accessory \
@@ -89,6 +86,14 @@ PRODUCT_PACKAGES += \
     CMSettings \
     Gallery
 
+# QCOM OMX
+PRODUCT_PACKAGES += \
+   libstagefrighthw \
+   libOmxCore \
+   libOmxVdec \
+   libOmxVidEnc \
+   libmm-omxcore \
+   libdivxdrmdecrypt
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.tethering.kb_disconnect=1
