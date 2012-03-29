@@ -13,6 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+# These is the hardware-specific overlay, which points to the location
+# of hardware-specific resource overrides, typically the frameworks and
+# application settings that are stored in resourced.
+DEVICE_PACKAGE_OVERLAYS += device/semc/msm7x30-common/overlay
+
 $(call inherit-product, frameworks/base/build/phone-hdpi-512-dalvik-heap.mk)
 
 PRODUCT_MANUFACTURER := Sony
@@ -88,12 +94,12 @@ PRODUCT_PACKAGES += \
 
 # QCOM OMX
 PRODUCT_PACKAGES += \
-   libstagefrighthw \
-   libOmxCore \
-   libOmxVdec \
-   libOmxVenc \
-   libmm-omxcore \
-   libdivxdrmdecrypt
+    libstagefrighthw \
+    libOmxCore \
+    libOmxVdec \
+    libOmxVenc \
+    libmm-omxcore \
+    libdivxdrmdecrypt
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.tethering.kb_disconnect=1
