@@ -101,6 +101,10 @@ PRODUCT_PACKAGES += \
     libmm-omxcore \
     libdivxdrmdecrypt
 
+#Torch
+PRODUCT_PACKAGES += \
+    Torch
+
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.tethering.kb_disconnect=1
 
