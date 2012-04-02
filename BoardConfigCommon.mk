@@ -23,17 +23,15 @@ TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH_VARIANT := armv7-a-neon
 ARCH_ARM_HAVE_TLS_REGISTER := true
-ARCH_ARM_HAVE_ARMV7A_BUG := true
+#ARCH_ARM_HAVE_ARMV7A_BUG := true
 
 BOARD_USES_GENERIC_AUDIO := false
-
 BOARD_HAVE_BLUETOOTH := true
 
 BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QCOM_GPS := true
 BOARD_USES_QCOM_LIBS := true
 BOARD_USES_QCOM_LIBRPC := true
-BUILD_SEMC_SENSORS := true
 USE_OPENGL_RENDERER := true
 TARGET_USES_C2D_COMPOSITION := true
 TARGET_USES_SF_BYPASS := false
@@ -44,6 +42,8 @@ TARGET_USES_GENLOCK := true
 TARGET_FORCE_CPU_UPLOAD := true
 COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60 -DQCOM_HARDWARE
 BOARD_EGL_CFG := device/semc/msm7x30-common/prebuilt/egl.cfg
+
+BUILD_SEMC_SENSORS := true
 
 BOARD_VENDOR_QCOM_AMSS_VERSION := 50000
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := semc
@@ -56,15 +56,14 @@ BOARD_HAS_NO_MISC_PARTITION := true
 BOARD_USES_RECOVERY_CHARGEMODE := false
 BOARD_CUSTOM_GRAPHICS := ../../../device/semc/msm7x30-common/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/semc/msm7x30-common/recovery/recovery_keys.c
+BOARD_UMS_LUNFILE := /sys/devices/platform/msm_hsusb/gadget/lun0/file
+BOARD_SDCARD_INTERNAL_DEVICE := /dev/block/mmcblk0p1
 
 BOARD_KERNEL_CMDLINE := console=null
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_RECOVERY_BASE := 0x00200000
 
-BOARD_SDCARD_INTERNAL_DEVICE := /dev/block/mmcblk0p1
 # A custom ota package maker for a device without an exposed boot partition
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/semc/msm7x30-common/releasetools/semc_ota_from_target_files
 
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/msm_hsusb/gadget/lun0/file
-BOARD_UMS_LUNFILE := /sys/devices/platform/msm_hsusb/gadget/lun0/file
 
