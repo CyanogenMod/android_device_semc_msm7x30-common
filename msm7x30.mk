@@ -122,6 +122,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.default_network=0 \
     ro.telephony.call_ring.multiple=false \
     ro.telephony.ril_class=SemcRIL \
+    ro.ril.disable.power.collapse=0 \
+    ro.ril.fast.dormancy.timeout=3 \
+    ro.ril.enable.sbm.feature=1 \
+    pm.sleep_mode=1 \
     wifi.supplicant_scan_interval=15 \
     keyguard.no_require_sim=true \
     ro.com.google.locationfeatures=1 \
@@ -139,4 +143,5 @@ PRODUCT_PROPERTY_OVERRIDES += \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
     persist.sys.usb.config=mtp,adb
+
 
