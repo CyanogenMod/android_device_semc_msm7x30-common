@@ -36,7 +36,6 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/base/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
 
-
 PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/fillers:root/filler \
     device/semc/msm7x30-common/prebuilt/10hostapconf:system/etc/init.d/10hostapconf \
@@ -44,7 +43,6 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
     device/semc/msm7x30-common/prebuilt/fstab:root/fstab \
     device/semc/msm7x30-common/prebuilt/bootrec:root/sbin/bootrec
-
 
 #recovery resources
 PRODUCT_COPY_FILES += \
@@ -69,29 +67,30 @@ PRODUCT_COPY_FILES += \
     bootable/recovery/res/images/progress_empty.png:root/res/images/progress_empty.png \
     bootable/recovery/res/images/progress_fill.png:root/res/images/progress_fill.png
 
+#Audio
+PRODUCT_PACKAGES += \
+    audio.a2dp.default \
+    audio.primary.msm7x30 \
+    audio_policy.msm7x30 \
+    libaudioutils
+
+#Gralloc
 PRODUCT_PACKAGES += \
     gralloc.msm7x30 \
     copybit.msm7x30 \
     hwcomposer.msm7x30 \
-    audio.primary.msm7x30 \
-    audio_policy.msm7x30 \
-    gps.semc \
-    lights.semc \
-    camera.semc \
-    sensors.semc \
     libgenlock \
     libQcomUI \
     libtilerenderer \
     libmemalloc \
-    liboverlay \
-    librs_jni \
-    Superuser \
-    su \
-    com.android.future.usb.accessory \
-    libcyanogen-dsp\
-    DSPManager \
-    CMSettings \
-    Gallery
+    liboverlay
+
+#Hal
+PRODUCT_PACKAGES += \
+    gps.semc \
+    lights.semc \
+    camera.semc \
+    sensors.semc
 
 # QCOM OMX
 PRODUCT_PACKAGES += \
@@ -102,8 +101,9 @@ PRODUCT_PACKAGES += \
     libmm-omxcore \
     libdivxdrmdecrypt
 
-#Torch
+#Misc
 PRODUCT_PACKAGES += \
+    com.android.future.usb.accessory \
     Torch
 
 PRODUCT_PROPERTY_OVERRIDES += \
