@@ -135,7 +135,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.sf.compbypass.enable=1 \
     dev.pm.dyn_samplingrate=1 \
     com.qc.hardware=true \
-    com.qc.hdmi_out=true \
     BUILD_UTC_DATE=0 \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
