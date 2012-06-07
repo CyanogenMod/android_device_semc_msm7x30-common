@@ -121,7 +121,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.ril.gprsclass=10 \
     ro.ril.def.agps.mode=2 \
     ro.ril.def.agps.feature=1 \
-    ro.telephony.default_network=0 \
     ro.telephony.call_ring.multiple=false \
     ro.telephony.ril_class=SemcRIL \
     ro.ril.disable.power.collapse=0 \
