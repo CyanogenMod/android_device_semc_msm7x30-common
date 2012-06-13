@@ -41,7 +41,8 @@ enum kgsl_deviceid {
 enum kgsl_user_mem_type {
 	KGSL_USER_MEM_TYPE_PMEM		= 0x00000000,
 	KGSL_USER_MEM_TYPE_ASHMEM	= 0x00000001,
-	KGSL_USER_MEM_TYPE_ADDR		= 0x00000002
+	KGSL_USER_MEM_TYPE_ADDR		= 0x00000002,
+	KGSL_USER_MEM_TYPE_ION		= 0x00000003,
 };
 
 struct kgsl_devinfo {
@@ -110,6 +111,7 @@ struct kgsl_shadowprop {
 struct kgsl_pwrlevel {
 	unsigned int gpu_freq;
 	unsigned int bus_freq;
+	unsigned int io_fraction;
 };
 
 struct kgsl_version {
