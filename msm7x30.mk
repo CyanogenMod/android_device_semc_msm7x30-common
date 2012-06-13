@@ -139,6 +139,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     BUILD_UTC_DATE=0 \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
-    persist.sys.usb.config=mass_storage
-
+    persist.sys.usb.config=mass_storage \
+    debug.camcorder.disablemeta = true
 
