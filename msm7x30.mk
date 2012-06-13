@@ -38,6 +38,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/fillers:root/filler \
+    device/semc/msm7x30-common/prebuilt/fillers:root/filler2 \
     device/semc/msm7x30-common/prebuilt/10hostapconf:system/etc/init.d/10hostapconf \
     device/semc/msm7x30-common/prebuilt/ueventd.semc.rc:root/ueventd.semc.rc \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
@@ -138,6 +139,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     BUILD_UTC_DATE=0 \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
-    persist.sys.usb.config=mass_storage
-
+    persist.sys.usb.config=mass_storage \
+    debug.camcorder.disablemeta = true
 
