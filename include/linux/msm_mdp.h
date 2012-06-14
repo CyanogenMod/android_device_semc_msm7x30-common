@@ -43,6 +43,10 @@
 #define MSMFB_OVERLAY_PLAY_ENABLE     _IOW(MSMFB_IOCTL_MAGIC, 141, unsigned int)
 #define MSMFB_DTV_LCDC_ENABLE     _IOW(MSMFB_IOCTL_MAGIC, 142, unsigned int)
 #define MSMFB_OVERLAY_REFRESH     _IOW(MSMFB_IOCTL_MAGIC, 143, unsigned int)
+#define MSMFB_OVERLAY_3D	_IOWR(MSMFB_IOCTL_MAGIC, 147, \
+						struct msmfb_overlay_3d)
+#define MSMFB_MIXER_INFO	_IOWR(MSMFB_IOCTL_MAGIC, 148, \
+						struct msmfb_mixer_info_req)
 #define MSMFB_OVERLAY_PLAY_WAIT _IOWR(MSMFB_IOCTL_MAGIC, 149, \
 						struct msmfb_overlay_data)
 
@@ -236,6 +240,12 @@ struct mdp_overlay {
 	struct dpp_ctrl dpp;
 };
 
+struct msmfb_overlay_3d {
+	uint32_t is_3d;
+	uint32_t width;
+	uint32_t height;
+};
+
 struct mdp_histogram {
 	uint32_t frame_cnt;
 	uint32_t bin_cnt;
@@ -363,6 +373,22 @@ struct msmfb_mdp_pp {
 
 struct mdp_page_protection {
 	uint32_t page_protection;
+};
+
+struct mdp_mixer_info {
+	int pndx;
+	int pnum;
+	int ptype;
+	int mixer_num;
+	int z_order;
+};
+
+#define MAX_PIPE_PER_MIXER  4
+
+struct msmfb_mixer_info_req {
+	int mixer_num;
+	int cnt;
+	struct mdp_mixer_info info[MAX_PIPE_PER_MIXER];
 };
 
 #ifdef __KERNEL__
