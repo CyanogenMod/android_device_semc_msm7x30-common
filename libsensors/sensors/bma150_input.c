@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #define LOG_TAG "DASH - bma150_input"
 
 #include <stdlib.h>
@@ -154,8 +155,6 @@ static void bma150_input_read_config(struct sensor_desc *d)
 
 static char *bma150_get_rate_path(int fd)
 {
-	/* Get the path to the sysfs 'rate' attribute. */
-
 	char *ret = NULL;
 	char sysfs_dev_path[100];
 
@@ -176,8 +175,6 @@ static char *bma150_get_rate_path(int fd)
 
 static void bma150_set_rate(const struct sensor_desc *d, int rate_msec)
 {
-	/* Set the poll rate by writing to sysfs. */
-
 	int rate_fd;
 	int rc = -1;
 
@@ -270,20 +267,6 @@ static int bma150_input_fw_delay(struct sensor_api_t *s, int64_t ns)
 	return bma150_input_set_delay(s);
 }
 
-/**
-	bma150_input_request_delay: request/remove sensor delay.
-	@ns: input: requested delay (nanoseconds). Zero value means previously
-	made request is removed.
-	@handle: input/output: pointer to request handle. Is filled by this
-	function upon requesting the delay and is used by this function upon
-	releasing the delay request.
-	- if @handle <= 0 and @ns != 0, new handle will be allocated and
-	 stored to *handle
-	- if @handle > 0 and @ns != 0, delay will be changed for this handle
-	- if @handle > 0 and @ns == 0, handle will be released
-	 (-1 stored to *handle)
-*/
-
 int bma150_input_request_delay(int *handle, int64_t ns)
 {
 	struct sensor_desc *d = &bma150_input;
@@ -298,8 +281,10 @@ int bma150_input_request_delay(int *handle, int64_t ns)
 		*handle = -1;
 		goto found;
 	}
-	if (!ns) /* error situation */
+
+	if (!ns) /* Error */
 		return -1;
+
 	if (!VALID_HANDLE(h)) {
 		/* Need to allocate new handle */
 		for (i = CLIENT_ANDROID + 1; i < MAX_CLIENTS; i++) {
@@ -314,7 +299,7 @@ found:
 	d->delay_requests[h] = ns;
 	err = bma150_input_set_delay(&bma150_input.api);
 	if (err) {
-		/* delay not set - deallocate handle */
+		/* Delay not set - deallocate handle */
 		d->delay_requests[h] = CLIENT_DELAY_UNUSED;
 		*handle = -1;
 	}

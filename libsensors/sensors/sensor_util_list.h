@@ -14,19 +14,36 @@
  * limitations under the License.
  */
 
-#ifndef SENSORS_CONFIG_H_
-#define SENSORS_CONFIG_H_
+#ifndef SENSOR_UTIL_LIST_H_
+#define SENSOR_UTIL_LIST_H_
 
-enum config_type_t {
-	TYPE_STRING,
-	TYPE_ARRAY_INT,
-	TYPE_INT
+struct list_node {
+	struct list_node *n;
+	struct list_node *p;
 };
 
-int sensors_have_config_file();
-int sensors_config_read(char* filename);
-int sensors_config_get_key(char* prefix, char* key, enum config_type_t type,
-			   void *out_value, int out_size);
-void sensors_config_destroy();
+static inline void node_init(struct list_node *node)
+{
+	node->n = node->p = node;
+}
 
+static inline void node_add(struct list_node *head, struct list_node *node)
+{
+	node->n = head->n;
+	node->p = head;
+	head->n = node;
+	node->n->p = node;
+}
+
+static inline void node_del(struct list_node *node)
+{
+	node->p->n = node->n;
+	node->n->p = node->p;
+}
+
+static inline void node_del_init(struct list_node *node)
+{
+	node_del(node);
+	node_init(node);
+}
 #endif

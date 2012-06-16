@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #define LOG_TAG "DASH - config"
 
 #include <stdio.h>
@@ -139,7 +140,7 @@ int sensors_config_read(char* filename)
 			goto exit;
 		}
 
-		/* Aerguments have length MAX_STR_LEN=64 */
+		/* Arguments have length MAX_STR_LEN=64 */
 		if (sscanf(buf, "%64[^_]_%64[^ =]%*[ =]"
 			"%64[^\n]", new_entry->prefix,
 			new_entry->key, new_entry->value) == 3) {

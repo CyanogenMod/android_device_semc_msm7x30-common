@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef SENSORS_WRAPPER_H
 #define SENSORS_WRAPPER_H
 
 #include <hardware/sensors.h>
 #include "sensor_api.h"
 
-#define MAX_SENSOR_CONNECTIONS (4)
+#define MAX_SENSOR_CONNECTIONS 4
 
 /* Android sensor HAL types and functions */
 struct wrapper_access {
@@ -55,4 +56,4 @@ void sensors_wrapper_register(struct sensor_t *sensor,
 
 void sensors_wrapper_data(struct sensor_data_t *sd);
 
-#endif /* SENSORS_WRAPPER_H */
+#endif

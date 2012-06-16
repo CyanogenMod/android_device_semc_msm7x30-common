@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- #define LOG_TAG "DASH"
+
+#define LOG_TAG "DASH"
+
 #include <stddef.h>
 #include <string.h>
 #include <cutils/log.h>
@@ -30,12 +32,12 @@
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 #define LOCK(p) do { \
-	LOGV("%s(%d): %s: lock\n", __FILE__, __LINE__, __func__); \
+	LOGD("%s(%d): %s: lock\n", __FILE__, __LINE__, __func__); \
 	pthread_mutex_lock(p); \
 } while (0)
 
 #define UNLOCK(p) do { \
-	LOGV("%s(%d): %s: unlock\n", __FILE__, __LINE__, __func__); \
+	LOGD("%s(%d): %s: unlock\n", __FILE__, __LINE__, __func__); \
 	pthread_mutex_unlock(p); \
 } while (0)
 
@@ -50,29 +52,32 @@ static struct wrapper_list list[16];
 static int idx = 0;
 
 /* list manipulation routines */
-static inline int list_get_status(int sensor, unsigned char pattern)
+static int list_get_status(int sensor, unsigned char pattern)
 {
-	int j, found = 0;
+	int j;
+	int found = 0;
+
 	for (j = 0; j < list[sensor].entry->nr; j++) {
 		if (list[sensor].entry->status[j] & pattern)
 			found++;
 	}
+
 	return found;
 }
 
-static inline void list_set_status(int sensor, int client,
+static void list_set_status(int sensor, int client,
 						unsigned char pattern)
 {
 	list[sensor].entry->status[client] |= pattern;
 }
 
-static inline void list_clear_status(int sensor, int client,
+static void list_clear_status(int sensor, int client,
 						unsigned char pattern)
 {
 	list[sensor].entry->status[client] &= ~pattern;
 }
 
-static inline int64_t list_get_rate(int sensor)
+static int64_t list_get_rate(int sensor)
 {
 	int j;
 	int64_t rate = NO_RATE;
@@ -81,15 +86,16 @@ static inline int64_t list_get_rate(int sensor)
 		if (list[sensor].entry->rate[j] < rate)
 			rate = list[sensor].entry->rate[j];
 	}
+
 	return rate;
 }
 
-static inline void list_set_rate(int sensor, int client, int64_t rate)
+static void list_set_rate(int sensor, int client, int64_t rate)
 {
 	list[sensor].entry->rate[client] = rate;
 }
 
-static inline void list_set_api(int sensor, int client, struct sensor_api_t *s)
+static void list_set_api(int sensor, int client, struct sensor_api_t *s)
 {
 	list[sensor].entry->api[client] = s;
 }
@@ -100,13 +106,14 @@ void sensors_wrapper_register(struct sensor_t *sensor,
 				struct wrapper_entry *entry)
 {
 	int i;
+
 	if (sensor == NULL || api == NULL || entry == NULL) {
 		if (sensor == NULL)
 			LOGE("%s: Error sensor is NULL pointer", __func__);
 		else
 			LOGE("%s: Error %s NULL pointer", __func__,
 				sensor->name);
-		return ;
+		return;
 	}
 
 	for (i = 0; i < MAX_SENSOR_CONNECTIONS; i++) {
@@ -130,16 +137,18 @@ void sensors_wrapper_register(struct sensor_t *sensor,
    lock and unlock is handled by sensor select to keep the lock order */
 void sensors_wrapper_data(struct sensor_data_t *sd)
 {
-	int i = 0, j = 0;
+	int i = 0;
+	int j = 0;
 
 	while (sd->sensor != list[i].sensor) {
 		i++;
 		if (i >= idx) {
 			LOGE("%s: Error %s not found",
 				__func__, sd->sensor->name);
-			return ;
+			return;
 		}
 	}
+
 	for (j = 0; j < list[i].entry->nr; j++) {
 		if (list[i].entry->status[j] & ACTIVE) {
 			if (list[i].entry->api[j]->data != NULL)
@@ -154,15 +163,15 @@ void sensors_wrapper_data(struct sensor_data_t *sd)
 int sensors_wrapper_init(struct sensor_api_t *s)
 {
 	struct wrapper_desc *d = container_of(s, struct wrapper_desc, api);
-	int i, m, init, rv = 0;
+	int i;
+	int m;
+	int init;
+	int rv = 0;
 
 	LOCK(&wrapper_mutex);
 	for (i = 0; i < idx; i++) {
 		for (m = 0; m < d->access.m_nr; m++) {
 			if (list[i].sensor->type == d->access.match[m]) {
-				LOGV("%s: matched '%s' and '%s'", __func__,
-					d->sensor.name, list[i].sensor->name);
-
 				d->access.sensor[d->access.nr] = i;
 				d->access.client[d->access.nr] =
 							list[i].entry->nr;
@@ -191,6 +200,7 @@ int sensors_wrapper_init(struct sensor_api_t *s)
 		}
 	}
 	UNLOCK(&wrapper_mutex);
+
 	return rv;
 }
 
@@ -199,7 +209,11 @@ int sensors_wrapper_init(struct sensor_api_t *s)
 int sensors_wrapper_activate(struct sensor_api_t *s, int enable)
 {
 	struct wrapper_desc *d = container_of(s, struct wrapper_desc, api);
-	int i, sensor, client, active, rv = 0;
+	int i;
+	int sensor;
+	int client;
+	int active;
+	int rv = 0;
 	int64_t old_rate, new_rate;
 
 	LOCK(&wrapper_mutex);
@@ -229,6 +243,7 @@ int sensors_wrapper_activate(struct sensor_api_t *s, int enable)
 								enable);
 	}
 	UNLOCK(&wrapper_mutex);
+
 	return rv;
 }
 
@@ -237,7 +252,10 @@ int sensors_wrapper_activate(struct sensor_api_t *s, int enable)
 int sensors_wrapper_set_delay(struct sensor_api_t *s, int64_t ns)
 {
 	struct wrapper_desc *d = container_of(s, struct wrapper_desc, api);
-	int i, sensor, client, rv = 0;
+	int i;
+	int sensor;
+	int client;
+	int rv = 0;
 	int64_t old_rate, new_rate;
 
 	LOCK(&wrapper_mutex);
@@ -262,7 +280,10 @@ int sensors_wrapper_set_delay(struct sensor_api_t *s, int64_t ns)
 void sensors_wrapper_close(struct sensor_api_t *s)
 {
 	struct wrapper_desc *d = container_of(s, struct wrapper_desc, api);
-	int i, sensor, client, close;
+	int i;
+	int sensor;
+	int client;
+	int close;
 
 	LOCK(&wrapper_mutex);
 	for (i = 0; i < d->access.nr; i++) {

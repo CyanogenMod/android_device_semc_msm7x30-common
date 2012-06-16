@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ static int sensors_module_open(const struct hw_module_t* module, const char* id,
 	dev = malloc(sizeof(*dev));
 	if (!dev)
 		return -1;
-	
+
 	memset(dev, 0, sizeof(*dev));
 	dev->common.tag = HARDWARE_DEVICE_TAG;
 	dev->common.version = 0;
@@ -120,7 +120,7 @@ const struct sensors_module_t HAL_MODULE_INFO_SYM = {
 		version_minor: 0,
 		id: SENSORS_HARDWARE_MODULE_ID,
 		name : "dash",
-		author : "oskar.andero@sonyericsson.com",
+		author : "oskar.andero@sonymobile.com",
 		methods: &sensors_module_methods,
 	},
 	get_sensors_list: sensors_list_get

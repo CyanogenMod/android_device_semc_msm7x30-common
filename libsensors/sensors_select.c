@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,12 @@
 extern pthread_mutex_t wrapper_mutex;
 
 #define LOCK(p) do { \
-	LOGV("%s(%d): %s: lock\n", __FILE__, __LINE__, __func__); \
+	LOGD("%s(%d): %s: lock\n", __FILE__, __LINE__, __func__); \
 	pthread_mutex_lock(p); \
 } while (0)
 
 #define UNLOCK(p) do { \
-	LOGV("%s(%d): %s: unlock\n", __FILE__, __LINE__, __func__); \
+	LOGD("%s(%d): %s: unlock\n", __FILE__, __LINE__, __func__); \
 	pthread_mutex_unlock(p); \
 } while (0)
 
@@ -58,8 +58,6 @@ static void *sensors_select_callback(void *arg)
 		LOGE("%s: select failed!\n", __func__);
 	} else if (ret) {
 		if (FD_ISSET(s->ctl_fds[0], &readfds)) {
-			LOGV("%s: select canceled by request",
-					__func__);
 			read(s->ctl_fds[0], &ret, sizeof(ret));
 		} else if (FD_ISSET(s->fd, &readfds)) {
 			LOCK(&wrapper_mutex);
