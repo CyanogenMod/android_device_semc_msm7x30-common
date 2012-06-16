@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
@@ -29,7 +30,7 @@
 #include <ctype.h>
 #include <cutils/log.h>
 #include <pthread.h>
-#include "list.h"
+#include "sensor_util_list.h"
 
 #define NSEC_PER_SEC 1000000000L
 static int64_t timespec_to_ns(const struct timespec *ts)
@@ -150,6 +151,7 @@ int open_input_dev_by_name(char *name, int flags)
 
 	if (!input_dev_path_by_name(name, fname, sizeof(fname)))
 		return open(fname, flags);
+
 	return -1;
 }
 
@@ -167,6 +169,7 @@ int open_input_dev_by_name_store_nr(char *name, int flags, char *nr,
 		nr = strncpy(nr, &fname[len+1], nr_size);
 		return open(fname, flags);
 	}
+
 	return -1;
 }
 
@@ -204,19 +207,10 @@ int input_dev_path_by_keycode(int type, int code, char *path, int path_max)
 		}
 	}
 	closedir(dir);
+
 	return -1;
 }
 
-/**
-* dev_phys_path_by_attr - try to find physical device path by string attribute
-* @attr: attribute name (like "name", "modalias")
-* @attr_val: attribute value (like "bam150")
-* @base: physical path base (like "/sys/bus/i2c/devices",
-* 	so search will be done under /sys/bus/i2c/devices/<whatever>/)
-* @path: location to store found path (like "/sys/bus/i2c/devices/2-0054/")
-* @path_max: 'path' buffer size
-* Zero value returned on success
-*/
 int dev_phys_path_by_attr(const char *attr, const char *attr_val,
 			const char *base, char *path, int path_max)
 {
@@ -242,7 +236,7 @@ int dev_phys_path_by_attr(const char *attr, const char *attr_val,
 		rc = snprintf(path, path_max, "%s/%s/%s",
 				base, item->d_name, attr);
 		if (rc >= path_max) {
-			LOGV("Entry name truncated '%s'", path);
+			LOGD("Entry name truncated '%s'", path);
 			continue;
 		}
 		fd = open(path, O_RDONLY);
@@ -260,11 +254,12 @@ int dev_phys_path_by_attr(const char *attr, const char *attr_val,
 		notfound = strncmp(aval, attr_val, len);
 		if (!notfound) {
 			path[strlen(path) - strlen(attr)] = 0;
-			LOGV("'%s'='%s' found on  path '%s'",
+			LOGD("'%s' = '%s' found on  path '%s'",
 					attr, attr_val, path);
 			break;
 		}
 	}
 	closedir(dir);
+
 	return notfound;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #define LOG_TAG "DASH - proximity"
 
 #include <stdlib.h>
@@ -58,8 +59,8 @@ struct sensor_desc {
 
 static struct sensor_desc apds970x = {
 	.sensor = {
-		.name = "APDS970X",
-		.vendor = "Sony Ericsson",
+		.name = PROXIMITY_DEV_NAME,
+		.vendor = "Sony",
 		.version = sizeof(sensors_event_t),
 		.handle = SENSOR_PROXIMITY_HANDLE,
 		.type = SENSOR_TYPE_PROXIMITY,
@@ -77,9 +78,6 @@ static struct sensor_desc apds970x = {
 
 static void apds9700_init_threshold_members(struct sensor_desc *d, int fd_input)
 {
-	/* Get the physical path to the sysfs threshold attribute and
-	   set other threshold members. */
-
 	char buf[PATH_SIZE];
 	int fd_th;
 
@@ -111,7 +109,7 @@ static void apds9700_init_threshold_members(struct sensor_desc *d, int fd_input)
 	close(fd_th);
 	return;
 
- exit_with_defaults:
+exit_with_defaults:
 	d->th_path[0] = 0;
 	d->th_not_det = THRESH_DEFAULT;
 	d->th_det = THRESH_DEFAULT - 1;
@@ -119,9 +117,6 @@ static void apds9700_init_threshold_members(struct sensor_desc *d, int fd_input)
 
 static void apds9700_init_burst_members(struct sensor_desc *d, int fd_input)
 {
-	/* Get the physical path to the sysfs threshold attribute and
-	   set other threshold members. */
-
 	char buf[PATH_SIZE];
 	int fd_burst;
 	int requested_burst;
@@ -163,7 +158,7 @@ static void apds9700_init_burst_members(struct sensor_desc *d, int fd_input)
 	close(fd_burst);
 	return;
 
- exit_with_defaults:
+exit_with_defaults:
 	LOGE("Default burst path error\n");
 	d->burst_path[0] = 0;
 	d->burst_not_det = BURST_DEFAULT;
@@ -172,8 +167,6 @@ static void apds9700_init_burst_members(struct sensor_desc *d, int fd_input)
 
 static void apds9700_change_threshold(struct sensor_desc *d)
 {
-	/* Simulate hysteresis by changing the threshold. */
-
 	int fd_th;
 
 	if (d->th_path[0] == 0)
@@ -197,8 +190,6 @@ static void apds9700_change_threshold(struct sensor_desc *d)
 
 static void apds9700_change_burst(struct sensor_desc *d)
 {
-	/* Simulate hysteresis by changing the threshold. */
-
 	int fd_burst;
 
 	if (d->burst_path[0] == 0)

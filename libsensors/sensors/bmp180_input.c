@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#define LOG_TAG "DASH-bmp180_input"
+
+#define LOG_TAG "DASH - bmp180_input"
 
 #include <string.h>
 #include <cutils/log.h>

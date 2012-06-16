@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#define LOG_TAG "DASH-bma250_input"
+
+#define LOG_TAG "DASH - bma250_input"
 
 #include <string.h>
 #include <cutils/log.h>
@@ -377,8 +378,8 @@ static int bma250_input_config_delay(struct sensor_api_t *s)
 		usec = d->sensor.minDelay;
 	}
 
-	bma250_input_set_delay(s, usec );
-	LOGD("%s: rate:%lu\n", __func__, usec );
+	bma250_input_set_delay(s, usec);
+
 	return 0;
 }
 
@@ -389,27 +390,12 @@ static int bma250_input_fw_delay(struct sensor_api_t *s, int64_t ns)
 	return bma250_input_config_delay(s);
 }
 
-/**
-	bma250_input_request_delay: request/remove sensor delay.
-	@ns: input: requested delay (nanoseconds). Zero value means previously
-	made request is removed.
-	@handle: input/output: pointer to request handle. Is filled by this
-	function upon requesting the delay and is used by this function upon
-	releasing the delay request.
-	- if @handle <= 0 and @ns != 0, new handle will be allocated and
-	 stored to *handle
-	- if @handle > 0 and @ns != 0, delay will be changed for this handle
-	- if @handle > 0 and @ns == 0, handle will be released
-	 (-1 stored to *handle)
-*/
 int bma250_input_request_delay(int *handle, int64_t ns)
 {
 	struct sensor_desc *d = &bma250_input;
 	int err;
 	int h = *handle;
 	int i;
-
-	LOGD("%s: delay:%lu\n", __func__, ns );
 
 	if (!ns && VALID_HANDLE(h)) {
 		/* Need to release handle */

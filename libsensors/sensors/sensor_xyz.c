@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#define LOG_TAG "DASH"
+
+#define LOG_TAG "DASH - xyz"
 
 #include "sensor_xyz.h"
 
@@ -50,6 +51,7 @@ static int config_read_axis(char *prefix, char *key, struct config_record *cr)
 	} else {
 		LOGE("%s: failed to read %s_%s", __func__, prefix, key);
 	}
+
 	return rc;
 }
 
@@ -72,11 +74,6 @@ static void config_read_sensor_map(struct sensor_desc *d)
 	rec.max = 1;
 	rec.store = d->sign;
 	config_read_axis(d->map_prefix, "axis_sign", &rec);
-
-	LOGV("%s: %s: axis map [%2d %2d %2d]", __func__, d->sensor.name,
-	     d->map[AXIS_X], d->map[AXIS_Y], d->map[AXIS_Z]);
-	LOGV("%s: %s: axis sign [%2d %2d %2d]", __func__, d->sensor.name,
-	     d->sign[AXIS_X], d->sign[AXIS_Y], d->sign[AXIS_Z]);
 }
 
 static int store_str_attr(struct sensor_desc *d, const char *attr,
@@ -99,7 +96,6 @@ static int store_str_attr(struct sensor_desc *d, const char *attr,
 		goto exit;
 	}
 	fd = open(d->phys_path, O_WRONLY);
-	LOGV("%s: '%s' = %s", __func__, d->phys_path, val);
 	if (fd < 0) {
 		LOGE("%s: unable to open %s, err %d\n", __func__,
 			d->phys_path, errno);
@@ -111,6 +107,7 @@ static int store_str_attr(struct sensor_desc *d, const char *attr,
 		LOGE("%s: unable to write %s (fd %d), err %d\n", __func__,
 			d->phys_path, fd, errno);
 	close(fd);
+
 exit:
 	d->phys_path[l] = 0;
 	return rc > 0 ? 0 : rc;
@@ -140,8 +137,9 @@ static int open_input_device(struct sensor_desc *d)
 
 	if (d->dev_path[0] && !access(d->dev_path, R_OK))
 		goto open_device;
+
 	if (d->find_input(d)) {
-		LOGV("%s: No input device for '%s'", __func__, d->sensor.name);
+		LOGE("%s: No input device for '%s'", __func__, d->sensor.name);
 		/*
 		* Not created yet? Try to find it next time.
 		*/
@@ -150,13 +148,9 @@ static int open_input_device(struct sensor_desc *d)
 	}
 open_device:
 	rc = open(d->dev_path, O_RDONLY | O_NONBLOCK);
-	if (rc < 0) {
-		LOGE("%s: Failed to open '%s' but access(R_OK) got",
+	if (rc < 0)
+		LOGE("%s: Failed to open '%s' but got access R_OK",
 					__func__, d->dev_path);
-	} else {
-		LOGV("%s: Input device for '%s' opened, fd %d",
-			__func__, d->sensor.name, rc);
-	}
 	return rc;
 }
 
@@ -171,9 +165,6 @@ int sensor_xyz_init(struct sensor_api_t *s_api)
 		LOGE("%s: no phys dev path for dev name '%s'", __func__,
 			d->dev_name);
 		*d->phys_path = 0;
-	} else {
-		LOGV("%s: phys dev path '%s' for dev name '%s'", __func__,
-			d->phys_path, d->dev_name);
 	}
 	config_read_sensor_map(d);
 
@@ -188,7 +179,7 @@ int sensor_xyz_init(struct sensor_api_t *s_api)
 	}
 
 	sensors_select_init(&d->select_worker, d->read, d, -1);
-	LOGV("%s: input dev name '%s' - OK", __func__, d->input_name);
+
 	return 0;
 }
 
@@ -197,7 +188,6 @@ void sensor_xyz_close(struct sensor_api_t *s)
 	struct sensor_desc *d = container_of(s, struct sensor_desc, api);
 
 	d->select_worker.destroy(&d->select_worker);
-	LOGV("%s: for '%s'", __func__, d->input_name);
 }
 
 static enum dev_mode rate2mode(int ms)
@@ -208,6 +198,7 @@ static enum dev_mode rate2mode(int ms)
 		return MODE_GAME;
 	if (ms < RATE_NORMAL)
 		return MODE_UI;
+
 	return MODE_NORMAL;
 }
 
@@ -216,8 +207,6 @@ int sensor_xyz_set_delay(struct sensor_api_t *s, int64_t ns)
 	struct sensor_desc *d = container_of(s, struct sensor_desc, api);
 	int rc = 0;
 	int ms = ns/NS_TO_MS;
-
-	LOGV("%s: %lld ns for '%s'", __func__, ns, d->sensor.name);
 
 	if (ms != d->applied_delay_ms) {
 		rc = store_int_attr(d, d->dev_attr_rate_ms, ms);
@@ -238,6 +227,7 @@ int sensor_xyz_set_delay(struct sensor_api_t *s, int64_t ns)
 			}		}
 		d->applied_delay_ms = ms;
 	}
+
 error:
 	return rc;
 }
@@ -261,8 +251,7 @@ int sensor_xyz_activate(struct sensor_api_t *s, int enable)
 		d->select_worker.set_fd(&d->select_worker, -1);
 		d->select_worker.suspend(&d->select_worker);
 	}
-	LOGV("%s: %s '%s'", __func__, enable ? "enabled" : "disabled",
-		d->sensor.name);
+
 	return 0;
 }
 
@@ -289,6 +278,7 @@ void *sensor_xyz_read(void *arg)
 			__func__, fd, p->sensor.name);
 		return NULL;
 	}
+
 	n = n / sizeof(events[0]);
 	for (i = 0; i < n; i++) {
 		e = events + i;
@@ -318,5 +308,6 @@ void *sensor_xyz_read(void *arg)
 			sensors_wrapper_data(&sd);
 		}
 	}
+
 	return NULL;
 }

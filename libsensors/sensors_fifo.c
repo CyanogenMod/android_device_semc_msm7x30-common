@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ static struct sensors_fifo_t {
 void sensors_fifo_init()
 {
 	pthread_mutex_init(&sensors_fifo.mutex, NULL);
-	pthread_cond_init (&sensors_fifo.data_cond, NULL);
+	pthread_cond_init(&sensors_fifo.data_cond, NULL);
 }
 
 void sensors_fifo_deinit()
