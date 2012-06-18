@@ -37,6 +37,7 @@
 #define VDEC_S_BUSY	(VDEC_S_BASE + 13)
 #define VDEC_S_INPUT_BITSTREAM_ERR (VDEC_S_BASE + 14)
 
+
 #define VDEC_INTF_VER	1
 #define VDEC_MSG_BASE	0x0000000
 /* Codes to identify asynchronous message responses and events that driver
@@ -194,9 +195,6 @@ struct vdec_ioctl_msg {
 
 #define VDEC_IOCTL_SET_IDR_ONLY_DECODING \
 	_IO(VDEC_IOCTL_MAGIC, 33)
-
-#define VDEC_IOCTL_SET_CONT_ON_RECONFIG  \
-	_IO(VDEC_IOCTL_MAGIC, 34)
 
 #define VDEC_IOCTL_SET_DISABLE_DMX \
 	_IOW(VDEC_IOCTL_MAGIC, 35, struct vdec_ioctl_msg)
