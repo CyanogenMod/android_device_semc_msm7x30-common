@@ -23,7 +23,6 @@ TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH_VARIANT := armv7-a-neon
 ARCH_ARM_HAVE_TLS_REGISTER := true
-#ARCH_ARM_HAVE_ARMV7A_BUG := true
 
 BOARD_USES_GENERIC_AUDIO := false
 BOARD_HAVE_BLUETOOTH := true
@@ -64,6 +63,8 @@ BOARD_SDCARD_INTERNAL_DEVICE := /dev/block/mmcblk0p1
 BOARD_KERNEL_CMDLINE := console=null
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_RECOVERY_BASE := 0x00200000
+
+TARGET_BOOTANIMATION_PRELOAD := true
 
 # A custom ota package maker for a device without an exposed boot partition
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/semc/msm7x30-common/releasetools/semc_ota_from_target_files
