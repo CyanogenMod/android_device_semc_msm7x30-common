@@ -6,6 +6,7 @@
 /dev/msm_vpe             0666   system  system
 /dev/bma250              0640   compass system
 /dev/msm_aac*            0660   system  audio
+/dev/msm_mvs             0660   system  audio
 /dev/usb_accessory       0660   root    usb
 /dev/pmem_venc           0660   system  audio
 /dev/mtd/mtd0            0660   media   media
