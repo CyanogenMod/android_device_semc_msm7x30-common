@@ -19,7 +19,7 @@
 # application settings that are stored in resourced.
 DEVICE_PACKAGE_OVERLAYS += device/semc/msm7x30-common/overlay
 
-$(call inherit-product, frameworks/base/build/phone-hdpi-512-dalvik-heap.mk)
+$(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
 
 PRODUCT_MANUFACTURER := Sony
 
