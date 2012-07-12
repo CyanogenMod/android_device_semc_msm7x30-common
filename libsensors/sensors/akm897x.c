@@ -111,12 +111,12 @@ static int ak897x_read_axis(char *prefix, char *key, struct config_record *cr)
 			memcpy(cr->store, tmp, sizeof(tmp));
 			rc = 0;
 		} else {
-			LOGE("%s: bad config (%s_%s) [%2d %2d %2d]", __func__,
+			ALOGE("%s: bad config (%s_%s) [%2d %2d %2d]", __func__,
 					prefix, key, tmp[AXIS_X], tmp[AXIS_Y],
 					tmp[AXIS_Z]);
 		}
 	} else {
-		LOGE("%s: failed to read %s_%s", __func__, prefix, key);
+		ALOGE("%s: failed to read %s_%s", __func__, prefix, key);
 	}
 	return rc;
 }
@@ -126,7 +126,7 @@ static void ak897x_read_sensor_map(struct sensor_desc *d)
 	struct config_record rec;
 
 	if (!sensors_have_config_file()) {
-		LOGI("%s: No config file found. Using default config.",
+		ALOGI("%s: No config file found. Using default config.",
 		     __func__);
 		return;
 	}
@@ -141,9 +141,9 @@ static void ak897x_read_sensor_map(struct sensor_desc *d)
 	rec.store = d->sign;
 	ak897x_read_axis(d->map_prefix, "axis_sign", &rec);
 
-	LOGD("%s: %s: axis map [%2d %2d %2d]", __func__, d->sensor.name,
+	ALOGD("%s: %s: axis map [%2d %2d %2d]", __func__, d->sensor.name,
 	     d->map[AXIS_X], d->map[AXIS_Y], d->map[AXIS_Z]);
-	LOGD("%s: %s: axis sign [%2d %2d %2d]", __func__, d->sensor.name,
+	ALOGD("%s: %s: axis sign [%2d %2d %2d]", __func__, d->sensor.name,
 	     d->sign[AXIS_X], d->sign[AXIS_Y], d->sign[AXIS_Z]);
 }
 
@@ -158,7 +158,7 @@ static int ak897x_set_delay(struct sensor_api_t *s, int64_t ns)
 		int err;
 		err = sc->request_acc_delay(&sc->acc_handle, ns);
 		if (err)
-			LOGE("%s: unable to set accelerometer delay!\n", __func__);
+			ALOGE("%s: unable to set accelerometer delay!\n", __func__);
 	}
 	sc->select_worker.set_delay(&sc->select_worker, ns);
 
@@ -189,7 +189,7 @@ static int ak897x_init(struct sensor_api_t *s_api)
 	/* check for availablity */
 	fd = open_input_dev_by_name(sc->input_name, O_RDONLY | O_NONBLOCK);
 	if (fd < 0) {
-		LOGE("%s: unable to find %s input device!\n", __func__,
+		ALOGE("%s: unable to find %s input device!\n", __func__,
 			sc->input_name);
 		return -1;
 	}
@@ -228,7 +228,7 @@ static int ak897x_activate(struct sensor_api_t *s, int enable)
 		fd = open_input_dev_by_name(sc->input_name,
 						O_RDONLY | O_NONBLOCK);
 		if (fd < 0) {
-			LOGE("%s: Failed to open input device %s", __func__,
+			ALOGE("%s: Failed to open input device %s", __func__,
 				sc->input_name);
 			ret = -1;
 			goto exit;
@@ -247,7 +247,7 @@ static int ak897x_activate(struct sensor_api_t *s, int enable)
 		int err;
 		err = sc->request_acc_delay(&sc->acc_handle, 0);
 		if (err)
-			LOGE("%s: unable to set accelerometer delay!\n", __func__);
+			ALOGE("%s: unable to set accelerometer delay!\n", __func__);
 	}
 
 exit:

@@ -123,7 +123,7 @@ int sensors_config_read(char* filename)
 	}
 
 	if (!fp) {
-		LOGE("%s: unable to open config file", __func__);
+		ALOGE("%s: unable to open config file", __func__);
 		return -1;
 	}
 
@@ -146,7 +146,7 @@ int sensors_config_read(char* filename)
 			new_entry->key, new_entry->value) == 3) {
 			insert_entry(new_entry);
 		} else if (sscanf(buf, "%64[^ \n]", new_entry->prefix) == 1) {
-			LOGE("Parse error: %s", buf);
+			ALOGE("Parse error: %s", buf);
 			free(new_entry);
 			sensors_config_destroy();
 			retval = -1;
