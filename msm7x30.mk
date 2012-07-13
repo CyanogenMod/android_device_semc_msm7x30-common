@@ -36,7 +36,8 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.hardware.touchscreen.multitouch.distinct.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.distinct.xml \
     frameworks/base/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
-    frameworks/base/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
+    frameworks/base/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
+    packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml
 
 PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/fillers:root/fillers \
@@ -46,7 +47,6 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/fstab:root/fstab \
     device/semc/msm7x30-common/prebuilt/bootrec:root/sbin/bootrec \
     device/semc/msm7x30-common/prebuilt/postrecoveryboot.sh:root/sbin/postrecoveryboot.sh
-
 
 #recovery resources
 PRODUCT_COPY_FILES += \
@@ -105,6 +105,13 @@ PRODUCT_PACKAGES += \
     libmm-omxcore \
     libdivxdrmdecrypt
 
+# Live Wallpapers
+PRODUCT_PACKAGES += \
+    LiveWallpapers \
+    LiveWallpapersPicker \
+    VisualizationWallpapers \
+    librs_jni
+
 #Misc
 PRODUCT_PACKAGES += \
     com.android.future.usb.accessory \
@@ -143,4 +150,3 @@ PRODUCT_PROPERTY_OVERRIDES += \
     hwui.disable_vsync=true \
     persist.sys.usb.config=mass_storage \
     debug.camcorder.disablemeta=1
-

@@ -17,6 +17,11 @@
 <!-- Saga-specific phone app resources. -->
 <resources>
 
+    <!-- Determine whether calls to mute the microphone in PhoneUtils
+                           are routed through the android.media.AudioManager class (true) or through
+         the com.android.internal.telephony.Phone interface (false). -->
+    <bool name="send_mic_mute_to_AudioManager">true</bool>
+
     <!-- Enable the onscreen "Dial" button in the emergency dialer. -->
     <bool name="config_show_onscreen_dial_button">true</bool>
 
