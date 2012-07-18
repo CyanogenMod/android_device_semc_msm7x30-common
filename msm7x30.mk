@@ -40,13 +40,14 @@ PRODUCT_COPY_FILES += \
     packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml
 
 PRODUCT_COPY_FILES += \
-    device/semc/msm7x30-common/prebuilt/fillers:root/fillers \
     device/semc/msm7x30-common/prebuilt/10hostapconf:system/etc/init.d/10hostapconf \
     device/semc/msm7x30-common/prebuilt/ueventd.semc.rc:root/ueventd.semc.rc \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
     device/semc/msm7x30-common/prebuilt/fstab:root/fstab \
     device/semc/msm7x30-common/prebuilt/bootrec:root/sbin/bootrec \
     device/semc/msm7x30-common/prebuilt/postrecoveryboot.sh:root/sbin/postrecoveryboot.sh
+
+#    device/semc/msm7x30-common/prebuilt/fillers:root/fillers \
 
 #recovery resources
 PRODUCT_COPY_FILES += \
@@ -69,7 +70,8 @@ PRODUCT_COPY_FILES += \
     bootable/recovery/res/images/indeterminate05.png:root/res/images/indeterminate05.png \
     bootable/recovery/res/images/indeterminate06.png:root/res/images/indeterminate06.png \
     bootable/recovery/res/images/progress_empty.png:root/res/images/progress_empty.png \
-    bootable/recovery/res/images/progress_fill.png:root/res/images/progress_fill.png
+    bootable/recovery/res/images/progress_fill.png:root/res/images/progress_fill.png \
+    bootable/recovery/res/images/stitch.png:root/res/images/stitch.png
 
 #Audio
 PRODUCT_PACKAGES += \
