@@ -54,6 +54,7 @@ BOARD_CUSTOM_BOOTIMG_MK := device/semc/msm7x30-common/custombootimg.mk
 TARGET_RECOVERY_PRE_COMMAND := "touch /cache/recovery/boot;sync;"
 BOARD_HAS_SMALL_RECOVERY := true
 BOARD_HAS_NO_MISC_PARTITION := true
+BOARD_TOUCH_RECOVERY := yes
 BOARD_USES_RECOVERY_CHARGEMODE := false
 BOARD_CUSTOM_GRAPHICS := ../../../device/semc/msm7x30-common/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/semc/msm7x30-common/recovery/recovery_keys.c
