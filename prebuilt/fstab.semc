@@ -1,0 +1,10 @@
+# Android fstab file.
+#<src>                                                  <mnt_point>         <type>    <mnt_flags>                                                                         <fs_mgr_flags>
+# The filesystem that contains the filesystem checker binary (typically /system) cannot
+# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
+
+
+mtd@system          /system             yaffs2      ro                         wait
+mtd@cache           /cache              yaffs2      rw,noatime,nosuid,nodev    wait
+mtd@data            /data               yaffs2      rw,noatime,nosuid,nodev    wait
+

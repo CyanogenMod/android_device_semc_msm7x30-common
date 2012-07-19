@@ -39,14 +39,18 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
 
 PRODUCT_COPY_FILES += \
-    device/semc/msm7x30-common/prebuilt/fillers:root/fillers \
+    device/semc/msm7x30-common/prebuilt/media_codecs.xml:system/etc/media_codecs.xml \
+    device/semc/msm7x30-common/prebuilt/audio_policy.conf:system/etc/audio_policy.conf \
     device/semc/msm7x30-common/prebuilt/10hostapconf:system/etc/init.d/10hostapconf \
     device/semc/msm7x30-common/prebuilt/ueventd.semc.rc:root/ueventd.semc.rc \
     device/semc/msm7x30-common/prebuilt/gps.conf:system/etc/gps.conf \
     device/semc/msm7x30-common/prebuilt/vold.fstab:system/etc/vold.fstab \
     device/semc/msm7x30-common/prebuilt/fstab:root/fstab \
+    device/semc/msm7x30-common/prebuilt/fstab.semc:root/fstab.semc \
     device/semc/msm7x30-common/prebuilt/bootrec:root/sbin/bootrec \
     device/semc/msm7x30-common/prebuilt/postrecoveryboot.sh:root/sbin/postrecoveryboot.sh
+
+    device/semc/msm7x30-common/prebuilt/fillers:root/fillers \
 
 
 #recovery resources
@@ -75,10 +79,10 @@ PRODUCT_COPY_FILES += \
 
 #Audio
 PRODUCT_PACKAGES += \
+    audio.usb.default \
     audio.a2dp.default \
     audio.primary.msm7x30 \
-    audio_policy.msm7x30 \
-    libaudioutils
+    audio_policy.msm7x30
 
 #Gralloc
 PRODUCT_PACKAGES += \
