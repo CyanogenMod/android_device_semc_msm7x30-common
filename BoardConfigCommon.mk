@@ -40,7 +40,7 @@ TARGET_GRALLOC_USES_ASHMEM := true
 TARGET_USES_GENLOCK := true
 TARGET_FORCE_CPU_UPLOAD := true
 DYNAMIC_SHARED_LIBV8SO := true
-COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60 -DQCOM_HARDWARE -DICS_CAMERA_BLOB -DQCOM_ICS_COMPAT
+COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60 -DQCOM_HARDWARE -DICS_CAMERA_BLOB -DQCOM_ICS_COMPAT -DQCOM_NO_SECURE_PLAYBACK
 BOARD_EGL_CFG := device/semc/msm7x30-common/prebuilt/egl.cfg
 ENABLE_WEBGL := true
 
@@ -69,5 +69,3 @@ TARGET_BOOTANIMATION_PRELOAD := true
 
 # A custom ota package maker for a device without an exposed boot partition
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/semc/msm7x30-common/releasetools/semc_ota_from_target_files
-
-
