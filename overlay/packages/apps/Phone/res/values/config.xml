@@ -14,10 +14,15 @@
      limitations under the License.
 -->
 
-<!-- Saga-specific phone app resources. -->
+<!-- SEMC-specific phone app resources. -->
 <resources>
 
-    <!-- Enable the onscreen "Dial" button in the emergency dialer. -->
-    <bool name="config_show_onscreen_dial_button">true</bool>
+    <!-- Flag indicating whether the Phone app should ignore
+         EVENT_SIM_NETWORK_LOCKED events from the Sim.  If true, this will
+         prevent the IccNetworkDepersonalizationPanel from being shown,
+         and effectively disable the "Sim network lock" feature. -->
+    <bool name="ignore_sim_network_locked_events">true</bool>
+
+    <bool name="send_mic_mute_to_AudioManager">true</bool>
 
 </resources>
