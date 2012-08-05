@@ -32,12 +32,12 @@ extern pthread_mutex_t wrapper_mutex;
 
 #ifdef SENSOR_LOG
 #define LOCK(p) do { \
-	LOGD("%s(%d): %s: lock\n", __FILE__, __LINE__, __func__); \
+	ALOGD("%s(%d): %s: lock\n", __FILE__, __LINE__, __func__); \
 	pthread_mutex_lock(p); \
 } while (0)
 
 #define UNLOCK(p) do { \
-	LOGD("%s(%d): %s: unlock\n", __FILE__, __LINE__, __func__); \
+	ALOGD("%s(%d): %s: unlock\n", __FILE__, __LINE__, __func__); \
 	pthread_mutex_unlock(p); \
 } while (0)
 #endif
