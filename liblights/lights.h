@@ -9,9 +9,10 @@ char const*const BLUE_LED_FILE_TRIGGER	= "/sys/class/leds/blue/trigger";
 char const*const BUTTON_BACKLIGHT_FILE[] = {
   "/sys/class/leds/button-backlight/brightness",
   "/sys/class/leds/button-backlight-rgb1/brightness",
-  "/sys/class/leds/button-backlight-rgb2/brightness",
-  "/sys/class/leds/keyboard-backlight/brightness"
+  "/sys/class/leds/button-backlight-rgb2/brightness"
 };
+
+char const*const KEYBOARD_BACKLIGHT_FILE = "/sys/class/leds/keyboard-backlight/brightness";
 
 char const*const LCD_BACKLIGHT_FILE	= "/sys/class/leds/lcd-backlight/brightness";
 
