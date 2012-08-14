@@ -1,0 +1,9 @@
+Change-Id: I0a5defe2edc06007f177ca68bdc0f353552eba9d
+Code-Review+2: Jerpelea <jerpelea@gmail.com>
+Verified+1: Jerpelea <jerpelea@gmail.com>
+Code-Review+1: Henning Nielsen Lund <hnl_dk@amigaos.dk>
+Submitted-by: Jerpelea <jerpelea@gmail.com>
+Submitted-at: Tue, 14 Aug 2012 07:59:16 +0400
+Reviewed-on: http://review.cyanogenmod.com/21173
+Project: CyanogenMod/android_device_semc_msm7x30-common
+Branch: refs/heads/jellybean
