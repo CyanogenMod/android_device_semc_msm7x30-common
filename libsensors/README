@@ -1,26 +1,31 @@
 		Dynamic Android Sensor HAL
 		      D * A * S * H
 
-Copyright (c) Sony Ericsson Mobile Communication 2010
+Copyright (C) Sony Mobile Communication 2012
 
 
 Table of contents
 -----------------
 
-1 ............ Motivation
+1 ............ Description
 2 ............ File overview
 3 ............ License
 
 
-1 Motivation
-------------
+1 Description
+-------------
 
-To be able to support multiple sets of sensors for each device and sometimes
-also second-source sensors there is a need to easily be able to enable/disable
-sensors at compile-time.
+This sensor HAL implementation makes it possible to use one generic piece
+of code to satisfy multiple product requirements. By adding the possibility
+to enable sensors at compile-time it's simply a matter of specifying which
+sensors the product uses.
 
-There is also a need to be able to configure the sensors for different mounting
-of the chip in an easy way without having to change the code.
+The implementation also adds support for configuring the sensors at run-time
+using a configuration file. This makes it possible to, e.g. setting PCB mounting
+coordinates of the sensors.
+
+The DASH is the only sensor HAL implementation that is needed and hence the
+maintenance work is kept to a minimal.
 
 
 2 File overview
@@ -128,8 +133,8 @@ put in the libs directory.
 		          |
 		     +------------+
 		     |sensors_list|
-	 	     +------------+		 +--------+
-	 	      /          \ 		 | Vendor |
+		     +------------+		 +--------+
+		      /          \ 		 | Vendor |
 		  +--------+       +--------+	 | libs   |
 		  |sensor 1|  ...  |sensor N| -- |	  |
 		  +--------+       +--------+    |	  |
@@ -145,5 +150,5 @@ put in the libs directory.
 3 License
 ---------
 
-The license for all code in this project is specified in the LICENSE file.
+The license for all code in this project is specified in the NOTICE file.
 Please, refer to this file for further details.

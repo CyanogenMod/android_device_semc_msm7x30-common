@@ -17,7 +17,7 @@
 #define LOG_TAG "DASH - config"
 
 #include <stdio.h>
-#include <cutils/log.h>
+#include "sensors_log.h"
 #include <stdlib.h>
 #include <string.h>
 #include "sensors_config.h"

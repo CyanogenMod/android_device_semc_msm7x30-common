@@ -28,31 +28,24 @@
 #include "sensor_util.h"
 #include "sensors_id.h"
 #include "sensors_config.h"
+#include "sensors_wrapper.h"
 
 #define BMA250_INPUT_NAME "bma250"
 #define NR_MAX_SIZE 4
 
-#define VALID_HANDLE(h) ((h) > CLIENT_ANDROID && (h) < MAX_CLIENTS)
-
-enum bma250_clients {
-	CLIENT_ANDROID = 0,
-	MAX_CLIENTS = 2,
-	CLIENT_DELAY_UNUSED = 0,
-};
-
 static int bma250_input_init(struct sensor_api_t *s);
 static int bma250_input_activate(struct sensor_api_t *s, int enable);
-static int bma250_input_fw_delay(struct sensor_api_t *s, int64_t ns);
+static int bma250_input_set_delay(struct sensor_api_t *s, int64_t ns);
 static void bma250_input_close(struct sensor_api_t *s);
 static void *bma250_input_read(void *arg);
-
 struct sensor_desc {
 	struct sensors_select_t select_worker;
 	struct sensor_t sensor;
 	struct sensor_api_t api;
+	struct wrapper_entry entry;
 
 	int input_fd;
-	float current_data[3];
+	int current_data[3];
 	int64_t delay;
 	char nr[NR_MAX_SIZE];
 
@@ -65,7 +58,7 @@ struct sensor_desc {
 	int neg_y;
 	int neg_z;
 
-	int64_t  delay_requests[MAX_CLIENTS];
+	float scale;
 };
 
 static struct sensor_desc bma250_input = {
@@ -78,12 +71,12 @@ static struct sensor_desc bma250_input = {
 		maxRange: 156.96, /* max +/-16G */
 		resolution: 20,
 		power: 0.003,/* sleep 50ms */
-		minDelay: 10000000
+		minDelay: 10000
 	},
 	.api = {
 		init: bma250_input_init,
 		activate: bma250_input_activate,
-		set_delay: bma250_input_fw_delay,
+		set_delay: bma250_input_set_delay,
 		close: bma250_input_close
 	},
 	.input_fd = -1,
@@ -92,17 +85,9 @@ static struct sensor_desc bma250_input = {
 	.axis_z = 2,
 	.neg_x = 1,
 	.neg_y = 1,
-	.neg_z = 0
+	.neg_z = 0,
+	.scale = 1.0f / 256.0f, /* GRAVITY_EARTH applied in wrapper */
 };
-
-static inline float ev2grav(int evv)
-{
-	/* bma250 driver sensitivity is 256 lsb/g for all g-ranges. */
-	const float earth_g = 9.81;
-	const float lsb_per_g = 256;
-	float gravity_in_g = (float)evv / lsb_per_g;
-	return gravity_in_g * earth_g;
-}
 
 static void bma250_input_read_config(struct sensor_desc *d)
 {
@@ -209,10 +194,13 @@ static int bma250_input_set_delay(struct sensor_api_t *s, int64_t ns)
 	const int buf_max = 16;
 	char buf[buf_max];
 	int sysfs_fd, count, len;
-	unsigned int ms = ns/(1000*1000);
+	int64_t usec = ns / 1000;
 
-	d->delay = ns;
-	d->select_worker.set_delay(&d->select_worker, ns);
+	if (usec < d->sensor.minDelay)
+		usec = d->sensor.minDelay;
+
+	d->delay = usec * 1000;
+	d->select_worker.set_delay(&d->select_worker, d->delay);
 
 	/* rate */
 	count = snprintf(sysfs_path, sysfs_max, "%s%s/bma250_rate",
@@ -224,48 +212,7 @@ static int bma250_input_set_delay(struct sensor_api_t *s, int64_t ns)
 	if (sysfs_fd < 0)
 		goto open_error;
 
-	count = snprintf(buf, buf_max, "%d\n", ms);
-	if ((count < 0) || (count >= buf_max))
-		goto snprintf_error;
-
-	len = write(sysfs_fd, buf, count + 1);
-	close(sysfs_fd);
-	if (len < 0)
-		goto write_error;
-
-	/* range */
-	count = snprintf(sysfs_path, sysfs_max, "%s%s/bma250_range",
-					path, bma250_input.nr);
-	if ((count < 0) || (count >= sysfs_max))
-		goto snprintf_error;
-
-	sysfs_fd = open(sysfs_path, O_RDWR);
-	if (sysfs_fd < 0)
-		goto open_error;
-
-	count = snprintf(buf, buf_max, "2\n");
-	if ((count < 0) || (count >= buf_max))
-		goto snprintf_error;
-
-	len = write(sysfs_fd, buf, count + 1);
-	close(sysfs_fd);
-	if (len < 0)
-		goto write_error;
-
-	/* resolution */
-	count = snprintf(sysfs_path, sysfs_max, "%s%s/bma250_resolution",
-					path, bma250_input.nr);
-	if ((count < 0) || (count >= sysfs_max))
-		goto snprintf_error;
-
-	sysfs_fd = open(sysfs_path, O_RDWR);
-	if (sysfs_fd < 0)
-		goto open_error;
-
-	if (ms > 50)
-		count = snprintf(buf, buf_max, "0\n");
-	else
-		count = snprintf(buf, buf_max, "1\n");
+	count = snprintf(buf, buf_max, "%lld\n", usec / 1000);
 	if ((count < 0) || (count >= buf_max))
 		goto snprintf_error;
 
@@ -297,28 +244,41 @@ static void bma250_input_close(struct sensor_api_t *s)
 	d->select_worker.destroy(&d->select_worker);
 }
 
+#define MAX_EVENTS 5 /* X, Y, Z, MISC, SYN */
 static void *bma250_input_read(void *arg)
 {
 	struct sensor_api_t *s = arg;
 	struct sensor_desc *d = container_of(s, struct sensor_desc, api);
-	struct input_event event;
-	int fd = d->select_worker.get_fd(&d->select_worker);
-	sensors_event_t data;
+	struct input_event events[MAX_EVENTS];
+	struct input_event *e;
+	int fd;
+	int n;
+	int i;
+	struct sensor_data_t sd;
 
-	while (read(fd, &event, sizeof(event)) > 0) {
-		switch (event.type) {
+	fd = d->select_worker.get_fd(&d->select_worker);
+
+	n = read(fd, events, sizeof(events)) / sizeof(events[0]);
+	if (n < 0) {
+		ALOGE("%s: read error from fd %d, errno %d", __func__, fd, errno);
+		goto exit;
+	}
+
+	for (i = 0; i < n; i++) {
+		e = events + i;
+		switch (e->type) {
 		case EV_ABS:
-			switch (event.code) {
+			switch (e->code) {
 			case ABS_X:
-				d->current_data[0] = ev2grav(event.value);
+				d->current_data[d->axis_x] = d->neg_x ? -e->value : e->value;
 				break;
 
 			case ABS_Y:
-				d->current_data[1] = ev2grav(event.value);
+				d->current_data[d->axis_y] = d->neg_y ? -e->value : e->value;
 				break;
 
 			case ABS_Z:
-				d->current_data[2] = ev2grav(event.value);
+				d->current_data[d->axis_z] = d->neg_z ? -e->value : e->value;
 				break;
 
 			case ABS_MISC:
@@ -327,32 +287,26 @@ static void *bma250_input_read(void *arg)
 
 			default:
 				ALOGE("%s: unknown event code 0x%X\n",
-					__func__, event.code);
-				goto exit;
+					__func__, e->code);
+				break;
 			}
 			break;
 
 		case EV_SYN:
-			data.acceleration.x = (d->neg_x ? -d->current_data[d->axis_x] :
-						d->current_data[d->axis_x]);
-			data.acceleration.y = (d->neg_y ? -d->current_data[d->axis_y] :
-						d->current_data[d->axis_y]);
-			data.acceleration.z = (d->neg_z ? -d->current_data[d->axis_z] :
-						d->current_data[d->axis_z]);
-			data.acceleration.status = SENSOR_STATUS_ACCURACY_HIGH;
+			memset(&sd, 0, sizeof(sd));
+			sd.sensor = &d->sensor;
+			sd.timestamp = get_current_nano_time();
+			sd.data = d->current_data;
+			sd.scale = d->scale;
+			sd.status = SENSOR_STATUS_ACCURACY_HIGH;
 
-			data.sensor = bma250_input.sensor.handle;
-			data.type = bma250_input.sensor.type;
-			data.version = bma250_input.sensor.version;
-			data.timestamp = get_current_nano_time();
-
-			sensors_fifo_put(&data);
-			goto exit;
+			sensors_wrapper_data(&sd);
+			break;
 
 		default:
 			ALOGE("%s: unknown event type 0x%X\n",
-				__func__, event.type);
-			goto exit;
+				__func__, e->type);
+			break;
 		}
 	}
 
@@ -360,73 +314,9 @@ exit:
 	return NULL;
 }
 
-
-static int bma250_input_config_delay(struct sensor_api_t *s)
+list_constructor(bma250na_input_init_driver);
+void bma250na_input_init_driver()
 {
-	struct sensor_desc *d = container_of(s, struct sensor_desc, api);
-	int i;
-	int64_t usec = d->delay_requests[0];
-	int64_t x;
-
-	for (i = 0; i < MAX_CLIENTS; i++) {
-		x = d->delay_requests[i];
-		if (x > CLIENT_DELAY_UNUSED && x < usec)
-			usec = x;
-	}
-
-	if (usec < d->sensor.minDelay) {
-		usec = d->sensor.minDelay;
-	}
-
-	bma250_input_set_delay(s, usec);
-
-	return 0;
-}
-
-static int bma250_input_fw_delay(struct sensor_api_t *s, int64_t ns)
-{
-	struct sensor_desc *d = container_of(s, struct sensor_desc, api);
-	d->delay_requests[CLIENT_ANDROID] = ns;
-	return bma250_input_config_delay(s);
-}
-
-int bma250_input_request_delay(int *handle, int64_t ns)
-{
-	struct sensor_desc *d = &bma250_input;
-	int err;
-	int h = *handle;
-	int i;
-
-	if (!ns && VALID_HANDLE(h)) {
-		/* Need to release handle */
-		*handle = -1;
-		goto found;
-	}
-	if (!ns) /* error situation */
-		return -1;
-	if (!VALID_HANDLE(h)) {
-		/* Need to allocate new handle */
-		for (i = CLIENT_ANDROID + 1; i < MAX_CLIENTS; i++) {
-			if (d->delay_requests[i] == CLIENT_DELAY_UNUSED) {
-				*handle = h = i;
-				goto found;
-			}
-		}
-	}
-
-found:
-	d->delay_requests[h] = ns;
-	err = bma250_input_config_delay(&bma250_input.api);
-	if (err) {
-		/* delay not set - deallocate handle */
-		d->delay_requests[h] = CLIENT_DELAY_UNUSED;
-		*handle = -1;
-	}
-	return err;
-}
-
-list_constructor(bma250_input_init_driver);
-void bma250_input_init_driver()
-{
-	(void)sensors_list_register(&bma250_input.sensor, &bma250_input.api);
+	(void)sensors_wrapper_register(&bma250_input.sensor, &bma250_input.api,
+				       &bma250_input.entry);
 }

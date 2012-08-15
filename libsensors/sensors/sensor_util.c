@@ -28,7 +28,7 @@
 #include "sensor_util.h"
 #include <dirent.h>
 #include <ctype.h>
-#include <cutils/log.h>
+#include "sensors_log.h"
 #include <pthread.h>
 #include "sensor_util_list.h"
 
