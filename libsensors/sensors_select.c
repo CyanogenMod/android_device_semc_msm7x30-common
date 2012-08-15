@@ -18,7 +18,7 @@
 
 #include <unistd.h>
 #include <string.h>
-#include <cutils/log.h>
+#include "sensors_log.h"
 #include <sys/select.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -26,21 +26,18 @@
 #include <fcntl.h>
 #include <errno.h>
 #include "sensors_select.h"
-//#define SENSOR_LOG
 
 extern pthread_mutex_t wrapper_mutex;
 
-#ifdef SENSOR_LOG
 #define LOCK(p) do { \
-	ALOGD("%s(%d): %s: lock\n", __FILE__, __LINE__, __func__); \
+	ALOGV("%s(%d): %s: lock\n", __FILE__, __LINE__, __func__); \
 	pthread_mutex_lock(p); \
 } while (0)
 
 #define UNLOCK(p) do { \
-	ALOGD("%s(%d): %s: unlock\n", __FILE__, __LINE__, __func__); \
+	ALOGV("%s(%d): %s: unlock\n", __FILE__, __LINE__, __func__); \
 	pthread_mutex_unlock(p); \
 } while (0)
-#endif
 
 static void *sensors_select_callback(void *arg)
 {
@@ -49,16 +46,12 @@ static void *sensors_select_callback(void *arg)
 	struct sensors_select_t *s = arg;
 	int maxfd;
 
-#ifdef SENSOR_LOG
 	LOCK(&s->fd_mutex);
-#endif
 	maxfd = s->ctl_fds[0] > s->fd ? s->ctl_fds[0] : s->fd;
 	FD_ZERO(&readfds);
 	FD_SET(s->ctl_fds[0], &readfds);
 	FD_SET(s->fd, &readfds);
-#ifdef SENSOR_LOG
 	UNLOCK(&s->fd_mutex);
-#endif
 	ret = select(maxfd + 1, &readfds, NULL, NULL, NULL);
 
 	if (ret < 0) {
@@ -67,16 +60,12 @@ static void *sensors_select_callback(void *arg)
 		if (FD_ISSET(s->ctl_fds[0], &readfds)) {
 			read(s->ctl_fds[0], &ret, sizeof(ret));
 		} else if (FD_ISSET(s->fd, &readfds)) {
-#ifdef SENSOR_LOG
 			LOCK(&wrapper_mutex);
 			LOCK(&s->fd_mutex);
-#endif
 			if (s->fd >= 0)
 			    s->select_callback(s->arg);
-#ifdef SENSOR_LOG
 			UNLOCK(&s->fd_mutex);
 			UNLOCK(&wrapper_mutex);
-#endif
 		}
 	}
 	return NULL;
@@ -109,9 +98,7 @@ static void sensors_select_resume(struct sensors_select_t* s)
 static void sensors_select_destroy(struct sensors_select_t* s)
 {
 	s->worker.destroy(&s->worker);
-#ifdef SENSOR_LOG
 	LOCK(&s->fd_mutex);
-#endif
 	if (s->fd > 0) {
 		close(s->fd);
 		s->fd = -1;
@@ -120,22 +107,16 @@ static void sensors_select_destroy(struct sensors_select_t* s)
 		close(s->ctl_fds[0]);
 	if (s->ctl_fds[1] > 0)
 		close(s->ctl_fds[1]);
-#ifdef SENSOR_LOG
 	UNLOCK(&s->fd_mutex);
-#endif
 }
 
 void sensors_select_set_fd(struct sensors_select_t* s, int fd)
 {
-#ifdef SENSOR_LOG
 	LOCK(&s->fd_mutex);
-#endif
 	if (s->fd > 0)
 		close(s->fd);
 	s->fd = fd;
-#ifdef SENSOR_LOG
 	UNLOCK(&s->fd_mutex);
-#endif
 	scheduler_select_notify(s);
 }
 

@@ -18,7 +18,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <cutils/log.h>
+#include "sensors_log.h"
 #include <fcntl.h>
 #include <linux/input.h>
 #include <errno.h>
@@ -59,7 +59,7 @@ struct sensor_desc {
 
 static struct sensor_desc apds970x = {
 	.sensor = {
-		.name = PROXIMITY_DEV_NAME,
+		.name = PROXIMITY_SENSOR_NAME,
 		.vendor = "Sony",
 		.version = sizeof(sensors_event_t),
 		.handle = SENSOR_PROXIMITY_HANDLE,

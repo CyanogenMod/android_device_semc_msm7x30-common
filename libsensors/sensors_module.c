@@ -17,7 +17,7 @@
 #define LOG_TAG "DASH - module"
 
 #include <stdio.h>
-#include <cutils/log.h>
+#include "sensors_log.h"
 #include <stdlib.h>
 #include <string.h>
 #include "sensors_list.h"
@@ -113,7 +113,7 @@ struct hw_module_methods_t sensors_module_methods = {
 	open: sensors_module_open
 };
 
-struct sensors_module_t HAL_MODULE_INFO_SYM = {
+const struct sensors_module_t HAL_MODULE_INFO_SYM = {
 	common: {
 		tag: HARDWARE_MODULE_TAG,
 		version_major: 1,

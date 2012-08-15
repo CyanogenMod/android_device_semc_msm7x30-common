@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <cutils/log.h>
 #include <linux/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -26,6 +25,7 @@
 #include <linux/input.h>
 #include <pthread.h>
 #include <errno.h>
+#include "sensors_log.h"
 #include "sensors_list.h"
 #include "sensors_fifo.h"
 #include "sensors_select.h"
@@ -33,7 +33,13 @@
 #include "sensors_id.h"
 #include "sensors_config.h"
 
-#include "akm8975.h"
+#if defined(AK8973)
+#include <linux/akm8973.h>
+#elif defined(AK8975)
+#include <linux/i2c/akm8975.h>
+#else
+#error No AKM chip is defined
+#endif
 
 #ifdef ACC_BMA150_INPUT
 int bma150_input_request_delay(int *handle, int64_t ns);
@@ -352,7 +358,7 @@ int dummy_acc_delay(int *handle, int64_t ns)
 static struct ak897x_sensor_composition ak897x_compass = {
 	.orientation = {
 		.sensor = {
-			name: "AKM897x Compass",
+			name: AKM_CHIP_NAME" Compass",
 			vendor: "Asahi Kasei Corp.",
 			version: sizeof(sensors_event_t),
 			handle: SENSOR_ORIENTATION_HANDLE,
@@ -374,7 +380,7 @@ static struct ak897x_sensor_composition ak897x_compass = {
 	},
 	.orientation_raw = {
 		.sensor = {
-			name: "AKM897x Compass Raw",
+			name: AKM_CHIP_NAME" Compass Raw",
 			vendor: "Asahi Kasei Corp.",
 			version: sizeof(sensors_event_t),
 			handle: SENSOR_ORIENTATION_RAW_HANDLE,
@@ -396,7 +402,7 @@ static struct ak897x_sensor_composition ak897x_compass = {
 	},
 	.magnetic = {
 		.sensor = {
-			name: "AKM897x Magnetic Field",
+			name: AKM_CHIP_NAME" Magnetic Field",
 			vendor: "Asahi Kasei Corp.",
 			version: sizeof(sensors_event_t),
 			handle: SENSOR_MAGNETIC_FIELD_HANDLE,
