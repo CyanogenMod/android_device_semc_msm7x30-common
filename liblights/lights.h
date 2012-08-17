@@ -10,8 +10,9 @@ char const*const BUTTON_BACKLIGHT_FILE[] = {
   "/sys/class/leds/button-backlight/brightness",
   "/sys/class/leds/button-backlight-rgb1/brightness",
   "/sys/class/leds/button-backlight-rgb2/brightness",
-  "/sys/class/leds/keyboard-backlight/brightness"
 };
+
+char const*const KEYBOARD_BACKLIGHT_FILE = "/sys/class/leds/keyboard-backlight/brightness";
 
 char const*const LCD_BACKLIGHT_FILE	= "/sys/class/leds/lcd-backlight/brightness";
 
