@@ -98,7 +98,7 @@ PRODUCT_PACKAGES += \
     gps.semc \
     lights.semc \
     camera.semc \
-    sensors.semc
+    sensors.default
 
 # QCOM OMX
 PRODUCT_PACKAGES += \
