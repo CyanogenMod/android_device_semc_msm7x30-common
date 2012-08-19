@@ -42,7 +42,6 @@ BOARD_EGL_CFG := device/semc/msm7x30-common/prebuilt/egl.cfg
 
 # Webkit
 TARGET_FORCE_CPU_UPLOAD := true
-DYNAMIC_SHARED_LIBV8SO := true
 ENABLE_WEBGL := true
 
 SOMC_CFG_DASH_INCLUDED := yes
