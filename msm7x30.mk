@@ -129,7 +129,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.ril.def.agps.mode=2 \
     ro.ril.def.agps.feature=1 \
     ro.telephony.call_ring.multiple=false \
-    ro.telephony.ril_class=SemcRIL \
     wifi.supplicant_scan_interval=15 \
     keyguard.no_require_sim=true \
     ro.com.google.locationfeatures=1 \
