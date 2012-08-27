@@ -1,0 +1,5 @@
+#!/system/bin/sh
+
+# Clean the DHCP leases before starting.
+rm -f /data/misc/dhcp/dhcpcd-wlan0.lease >/dev/null 2>&1
+rm -f /data/misc/dhcp/dhcpcd-wlan0.pid >/dev/null 2>&1
