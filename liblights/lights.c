@@ -40,20 +40,12 @@ static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 static struct light_state_t g_notification;
 static struct light_state_t g_battery;
 
-static int g_backlight = 255;
-
 /* The leds we have */
 enum {
 	LED_RED,
 	LED_GREEN,
 	LED_BLUE,
 	LED_BLANK
-};
-
-enum {
-	MANUAL = 0,
-	AUTOMATIC,
-	MANUAL_SENSOR
 };
 
 static int write_int (const char *path, int value) {
@@ -114,24 +106,10 @@ static int rgb_to_brightness (struct light_state_t const* state) {
 static int set_light_backlight (struct light_device_t *dev, struct light_state_t const *state) {
 	int err = 0;
 	int brightness = rgb_to_brightness(state);
-	int als_mode;
 
-	switch (state->brightnessMode) {
-		case BRIGHTNESS_MODE_SENSOR:
-			als_mode = AUTOMATIC;
-			break;
-		case BRIGHTNESS_MODE_USER:
-			als_mode = BRIGHTNESS_MODE_USER;
-			break;
-		default:
-			als_mode = MANUAL_SENSOR;
-			break;
-	}
 
 	LOGV("%s brightness=%d color=0x%08x", __func__,brightness,state->color);
 	pthread_mutex_lock(&g_lock);
-	g_backlight = brightness;
-	err = write_int (ALS_FILE, als_mode);
 	err = write_int (LCD_BACKLIGHT_FILE, brightness);
 	pthread_mutex_unlock(&g_lock);
 	return err;
