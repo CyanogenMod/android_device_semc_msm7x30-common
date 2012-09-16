@@ -1,0 +1,6 @@
+#!/system/xbin/ash
+
+# Clean the DHCP leases before starting.
+rm -f /data/misc/dhcp/dhcpcd-wlan0.lease
+rm -f /data/misc/dhcp/dhcpcd-wlan0.pid
+
