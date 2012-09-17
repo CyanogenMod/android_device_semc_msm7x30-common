@@ -145,6 +145,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.mdpcomp.logs=0 \
     BUILD_UTC_DATE=0 \
     persist.sys.usb.config=mass_storage \
-    debug.camcorder.disablemeta=1
+    debug.camcorder.disablemeta=1 \
+    ro.hardware.respect_als=true
 
 #    debug.mdpcomp.maxlayer=3 \
