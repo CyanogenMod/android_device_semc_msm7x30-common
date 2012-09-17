@@ -47,6 +47,7 @@ BOARD_EGL_CFG := device/semc/msm7x30-common/prebuilt/egl.cfg
 ENABLE_WEBGL := true
 
 BUILD_SEMC_SENSORS := true
+BOARD_SYSFS_LIGHT_SENSOR := /sys/class/leds/lcd-backlight/als/enable
 
 BOARD_VENDOR_QCOM_AMSS_VERSION := 50000
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := semc
