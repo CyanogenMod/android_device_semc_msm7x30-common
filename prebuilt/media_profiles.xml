@@ -103,8 +103,8 @@
                    height="720"
                    frameRate="30" />
             <Audio codec="aac"
-                   bitRate="128000"
-                   sampleRate="48000"
+                   bitRate="96000"
+                   sampleRate="44100"
                    channels="2" />
         </EncoderProfile>
 
@@ -115,14 +115,14 @@
                    height="480"
                    frameRate="30" />
             <Audio codec="aac"
-                   bitRate="128000"
-                   sampleRate="48000"
+                   bitRate="96000"
+                   sampleRate="44100"
                    channels="2" />
         </EncoderProfile>
 
         <EncoderProfile quality="qvga" fileFormat="3gp" duration="60">
             <Video codec="h263"
-                   bitRate="128000"
+                   bitRate="96000"
                    width="320"
                    height="240"
                    frameRate="15" />
@@ -152,8 +152,8 @@
                    frameRate="30" />
             <!-- audio setting is ignored -->
             <Audio codec="aac"
-                   bitRate="128000"
-                   sampleRate="48000"
+                   bitRate="96000"
+                   sampleRate="44100"
                    channels="2" />
         </EncoderProfile>
 
@@ -165,14 +165,14 @@
                    frameRate="30" />
             <!-- audio setting is ignored -->
             <Audio codec="aac"
-                   bitRate="128000"
-                   sampleRate="48000"
+                   bitRate="96000"
+                   sampleRate="44100"
                    channels="2" />
         </EncoderProfile>
 
         <EncoderProfile quality="timelapseqvga" fileFormat="3gp" duration="60">
             <Video codec="h263"
-                   bitRate="128000"
+                   bitRate="96000"
                    width="320"
                    height="240"
                    frameRate="15" />
@@ -205,8 +205,8 @@
         <Camera previewFrameRate="0" />
 
     </CamcorderProfiles>
-
     <CamcorderProfiles cameraId="1">
+
         <!--
         Profiles for the front camera
         -->
@@ -217,14 +217,14 @@
                    height="480"
                    frameRate="30" />
            <Audio codec="aac"
-                   bitRate="128000"
-                   sampleRate="48000"
+                   bitRate="96000"
+                   sampleRate="44100"
                    channels="2" />
         </EncoderProfile>
 
         <EncoderProfile quality="qvga" fileFormat="3gp" duration="60">
             <Video codec="h263"
-                   bitRate="128000"
+                   bitRate="96000"
                    width="320"
                    height="240"
                    frameRate="15" />
@@ -254,14 +254,14 @@
                    frameRate="30" />
             <!-- audio setting is ignored -->
             <Audio codec="aac"
-                   bitRate="128000"
-                   sampleRate="48000"
+                   bitRate="96000"
+                   sampleRate="44100"
                    channels="2" />
         </EncoderProfile>
 
         <EncoderProfile quality="timelapseqvga" fileFormat="3gp" duration="60">
             <Video codec="h263"
-                   bitRate="128000"
+                   bitRate="96000"
                    width="320"
                    height="240"
                    frameRate="15" />
@@ -327,8 +327,8 @@
         minChannels="1" maxChannels="1" />
 
     <AudioEncoderCap name="aac" enabled="true"
-        minBitRate="5525" maxBitRate="128000"
-        minSampleRate="8000" maxSampleRate="48000"
+        minBitRate="5525" maxBitRate="96000"
+        minSampleRate="8000" maxSampleRate="44100"
         minChannels="1" maxChannels="1" />
 
 
