@@ -89,6 +89,7 @@ PRODUCT_PACKAGES += \
 #Misc
 PRODUCT_PACKAGES += \
     com.android.future.usb.accessory \
+    LegacyCamera \
     Torch
 
 PRODUCT_PROPERTY_OVERRIDES += \
