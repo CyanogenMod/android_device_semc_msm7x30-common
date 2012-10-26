@@ -124,7 +124,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mass_storage \
     debug.camcorder.disablemeta=1
 
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.hardware.respect_als=true
+#PRODUCT_PROPERTY_OVERRIDES += \
+#    ro.hardware.respect_als=true
 
 #    debug.mdpcomp.maxlayer=3 \
