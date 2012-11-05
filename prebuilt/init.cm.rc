@@ -2,6 +2,7 @@
 
 # Compcache - handle at boot
 service compcache /system/bin/handle_compcache
+    class late_start
     user root
     group root
     oneshot
