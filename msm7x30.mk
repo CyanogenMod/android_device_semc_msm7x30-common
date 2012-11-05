@@ -53,6 +53,10 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/bootrec:root/sbin/bootrec \
     device/semc/msm7x30-common/prebuilt/postrecoveryboot.sh:root/sbin/postrecoveryboot.sh
 
+# Compcache
+PRODUCT_COPY_FILES += \
+    device/semc/msm7x30-common/prebuilt/init.cm.rc:root/init.cm.rc
+
 #    device/semc/msm7x30-common/prebuilt/fillers:root/fillers \
 
 #Audio
