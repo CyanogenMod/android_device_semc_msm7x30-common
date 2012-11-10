@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 USE_CAMERA_STUB := true
+BOARD_USES_LEGACY_CAMERA := true
 
 TARGET_SPECIFIC_HEADER_PATH := device/semc/msm7x30-common/include
 
