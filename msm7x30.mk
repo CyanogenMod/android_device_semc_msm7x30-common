@@ -21,9 +21,6 @@ DEVICE_PACKAGE_OVERLAYS += device/semc/msm7x30-common/overlay
 
 $(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
 
-#recovery resources
-$(call inherit-product, device/semc/msm7x30-common/recovery/recovery.mk)
-
 PRODUCT_MANUFACTURER := Sony
 
 PRODUCT_COPY_FILES += \
@@ -50,7 +47,6 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/vold.fstab:system/etc/vold.fstab \
     device/semc/msm7x30-common/prebuilt/fstab:root/fstab \
     device/semc/msm7x30-common/prebuilt/fstab.semc:root/fstab.semc \
-    device/semc/msm7x30-common/prebuilt/bootrec:root/sbin/bootrec \
     device/semc/msm7x30-common/prebuilt/postrecoveryboot.sh:root/sbin/postrecoveryboot.sh
 
 #    device/semc/msm7x30-common/prebuilt/fillers:root/fillers \
