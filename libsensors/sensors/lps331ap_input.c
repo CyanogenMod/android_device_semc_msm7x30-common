@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "DASH - bmp180_input"
+#define LOG_TAG "DASH - lps331ap_input"
 
 #include <string.h>
 #include "sensors_log.h"
@@ -29,75 +29,82 @@
 #include "sensors_id.h"
 #include "sensors_sysfs.h"
 
-#define BMP180_INPUT_NAME "bmp180"
+#define LPS331AP_PRS_DEV_NAME "lps331ap_prs_sysfs"
+#define NR_SAMPLES 16
+#define ROW_TO_MBAR_SCALE 4096.0
 
-static int bmp180_input_init(struct sensor_api_t *s);
-static int bmp180_input_activate(struct sensor_api_t *s, int enable);
-static int bmp180_input_set_delay(struct sensor_api_t *s, int64_t ns);
-static void bmp180_input_close(struct sensor_api_t *s);
-static void *bmp180_input_read(void *arg);
+static int lps331ap_input_init(struct sensor_api_t *s);
+static int lps331ap_input_activate(struct sensor_api_t *s, int enable);
+static int lps331ap_input_set_delay(struct sensor_api_t *s, int64_t ns);
+static void lps331ap_input_close(struct sensor_api_t *s);
+static void *lps331ap_input_read(void *arg);
 
 struct sensor_desc {
 	struct sensors_select_t select_worker;
 	struct sensors_sysfs_t sysfs;
 	struct sensor_t sensor;
 	struct sensor_api_t api;
-	float current_data[2];
+	long current_data[2];
 	int64_t delay;
+	long mem[NR_SAMPLES];
+	int current_sample;
+	int num_samples;
 };
 
-static struct sensor_desc bmp180_pressure_input = {
-	.sensor = {
-		name: "BMP180 Pressure",
-		vendor: "Bosch Sensortec GmbH",
-		version: sizeof(sensors_event_t),
-		handle: SENSOR_PRESSURE_HANDLE,
-		type: SENSOR_TYPE_PRESSURE,
-		maxRange: 1100.00, /* hecto pascal */
-		resolution: 0.01, /* hecto pascal */
-		power: 0.012 /* mA per sample at ultra high resolution */
+static struct sensor_desc lps331ap_pressure_input = {
+	.sensor = { name: "LPS331AP Pressure",
+		vendor : "STMicroelectronics",
+		version : sizeof(sensors_event_t),
+		handle : SENSOR_PRESSURE_HANDLE,
+		type : SENSOR_TYPE_PRESSURE,
+		maxRange : 1100.00, /* hecto pascal */
+		resolution : 0.01, /* hecto pascal */
+		power : 0.012 /* mA per sample at ultra high resolution */
 	},
-	.api = {
-		init: bmp180_input_init,
-		activate: bmp180_input_activate,
-		set_delay: bmp180_input_set_delay,
-		close: bmp180_input_close
+	.api = { init: lps331ap_input_init,
+		activate : lps331ap_input_activate,
+		set_delay : lps331ap_input_set_delay,
+		close : lps331ap_input_close
 	},
 };
 
-static int bmp180_input_init(struct sensor_api_t *s)
+static int lps331ap_input_init(struct sensor_api_t *s)
 {
 	struct sensor_desc *d = container_of(s, struct sensor_desc, api);
 	int fd;
 
-	fd = open_input_dev_by_name(BMP180_INPUT_NAME, O_RDONLY | O_NONBLOCK);
+	fd = open_input_dev_by_name(LPS331AP_PRS_DEV_NAME, O_RDONLY | O_NONBLOCK);
 	if (fd < 0) {
 		ALOGE("%s: failed to open input dev %s, error: %s\n",
-			__func__, BMP180_INPUT_NAME, strerror(errno));
+			__func__, LPS331AP_PRS_DEV_NAME, strerror(errno));
 		return -1;
 	}
 	close(fd);
 
-	sensors_sysfs_init(&d->sysfs, BMP180_INPUT_NAME, SYSFS_TYPE_INPUT_DEV);
-	sensors_select_init(&d->select_worker, bmp180_input_read, s, -1);
+	sensors_sysfs_init(&d->sysfs, LPS331AP_PRS_DEV_NAME, SYSFS_TYPE_INPUT_DEV);
+	sensors_select_init(&d->select_worker, lps331ap_input_read, s, -1);
 
 	return 0;
 }
 
-static int bmp180_input_activate(struct sensor_api_t *s, int enable)
+static int lps331ap_input_activate(struct sensor_api_t *s, int enable)
 {
 	struct sensor_desc *d = container_of(s, struct sensor_desc, api);
 	int fd = d->select_worker.get_fd(&d->select_worker);
 
 	/* suspend/resume will be handled in kernel-space */
 	if (enable && (fd < 0)) {
-		fd = open_input_dev_by_name(BMP180_INPUT_NAME,
+		fd = open_input_dev_by_name(LPS331AP_PRS_DEV_NAME,
 			O_RDONLY | O_NONBLOCK);
 		if (fd < 0) {
 			ALOGE("%s: failed to open input dev %s, error: %s\n",
-				__func__, BMP180_INPUT_NAME, strerror(errno));
+				__func__, LPS331AP_PRS_DEV_NAME,
+				strerror(errno));
 			return -1;
 		}
+		d->current_sample = 0;
+		d->num_samples = 0;
+		d->current_data[0] = 0;
 		d->select_worker.set_fd(&d->select_worker, fd);
 		d->select_worker.resume(&d->select_worker);
 	} else if (!enable && (fd > 0)) {
@@ -107,31 +114,31 @@ static int bmp180_input_activate(struct sensor_api_t *s, int enable)
 	return 0;
 }
 
-static int bmp180_input_set_delay(struct sensor_api_t *s, int64_t ns)
+static int lps331ap_input_set_delay(struct sensor_api_t *s, int64_t ns)
 {
 	struct sensor_desc *d = container_of(s, struct sensor_desc, api);
 	int fd = d->select_worker.get_fd(&d->select_worker);
 	unsigned int ms = ns/(1000*1000);
 
 	d->delay = ns;
-	d->select_worker.set_delay(&d->select_worker, ns);
 
-	return d->sysfs.write_int(&d->sysfs, "bmp180_rate", ms);
+	return d->sysfs.write_int(&d->sysfs, "device/poll_period_ms", ms);
 }
 
-static void bmp180_input_close(struct sensor_api_t *s)
+static void lps331ap_input_close(struct sensor_api_t *s)
 {
 	struct sensor_desc *d = container_of(s, struct sensor_desc, api);
 	d->select_worker.destroy(&d->select_worker);
 }
 
-static void *bmp180_input_read(void *arg)
+static void *lps331ap_input_read(void *arg)
 {
 	struct sensor_api_t *s = arg;
 	struct sensor_desc *d = container_of(s, struct sensor_desc, api);
 	struct input_event event[3];
 	int bytes, i, fd;
 	sensors_event_t data;
+	long pressure;
 
 	fd = d->select_worker.get_fd(&d->select_worker);
 
@@ -139,7 +146,7 @@ static void *bmp180_input_read(void *arg)
 
 	if (bytes < 0) {
 		ALOGE("%s: read failed, error: %d\n", __func__, bytes);
-		goto exit;
+		return NULL;
 	}
 
 	for (i = 0; i < (bytes / (int)sizeof(struct input_event)); i++) {
@@ -148,27 +155,29 @@ static void *bmp180_input_read(void *arg)
 			switch (event[i].code) {
 			case ABS_PRESSURE:
 				/* convert to hPa (millibar) */
-				d->current_data[0] = (float)event[i].value/100;
-				break;
+				if (d->num_samples == NR_SAMPLES)
+					d->current_data[0] -=
+						d->mem[d->current_sample];
+				else
+					d->num_samples++;
 
-			case ABS_MISC:
-				/* convert to degree celsius */
-				d->current_data[1] = (float)event[i].value/10;
+				d->mem[d->current_sample++] = event[i].value;
+				d->current_data[0] += event[i].value;
+				d->current_sample %= NR_SAMPLES;
 				break;
-
 			default:
-				ALOGE("%s: unknown event code 0x%X\n",
-					__func__, event[i].code);
 				break;
 			}
 			break;
 
 		case EV_SYN:
 			/* report pressure */
-			data.pressure = d->current_data[0];
-			data.version = bmp180_pressure_input.sensor.version;
-			data.sensor = bmp180_pressure_input.sensor.handle;
-			data.type = bmp180_pressure_input.sensor.type;
+			pressure = d->current_data[0] / d->num_samples;
+			data.pressure = pressure / ROW_TO_MBAR_SCALE;
+			ALOGD_IF(DEBUG_VERBOSE, "lps331ap: %f", data.pressure);
+			data.version = lps331ap_pressure_input.sensor.version;
+			data.sensor = lps331ap_pressure_input.sensor.handle;
+			data.type = lps331ap_pressure_input.sensor.type;
 			data.timestamp = get_current_nano_time();
 			sensors_fifo_put(&data);
 			break;
@@ -179,13 +188,13 @@ static void *bmp180_input_read(void *arg)
 			break;
 		}
 	}
-exit:
+
 	return NULL;
 }
 
-list_constructor(bmp180_input_init_driver);
-void bmp180_input_init_driver()
+list_constructor(lps331ap_input_init_driver);
+void lps331ap_input_init_driver()
 {
-	(void)sensors_list_register(&bmp180_pressure_input.sensor,
-					&bmp180_pressure_input.api);
+	(void)sensors_list_register(&lps331ap_pressure_input.sensor,
+					&lps331ap_pressure_input.api);
 }

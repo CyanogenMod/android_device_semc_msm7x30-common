@@ -16,7 +16,7 @@
 
 #define LOG_TAG "DASH - worker"
 
-#include <cutils/log.h>
+#include "sensors_log.h"
 #include <time.h>
 #include <string.h>
 #include <errno.h>
@@ -29,9 +29,8 @@ static void sensor_nano_sleep(int64_t utime)
 	if (utime <= 0)
 		return;
 
-	memset(&t, 0, sizeof(t));
-	t.tv_nsec = (long)(utime);
-
+	t.tv_sec = (time_t)(utime / 1e9);
+	t.tv_nsec = (long)(utime % 1000000000L);
 	nanosleep(&t, NULL);
 }
 

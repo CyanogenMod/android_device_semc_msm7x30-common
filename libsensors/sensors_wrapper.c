@@ -18,12 +18,11 @@
 
 #include <stddef.h>
 #include <string.h>
-#include <cutils/log.h>
+#include "sensors_log.h"
 #include <pthread.h>
 #include "sensor_util.h"
 #include "sensors_wrapper.h"
 
-#define NO_RATE		0xFFFFFFFF
 #define UNUSED		0
 #define CLOSE		0x1
 #define INIT		0x2
@@ -32,12 +31,12 @@
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 #define LOCK(p) do { \
-	LOGD("%s(%d): %s: lock\n", __FILE__, __LINE__, __func__); \
+	ALOGD("%s(%d): %s: lock\n", __FILE__, __LINE__, __func__); \
 	pthread_mutex_lock(p); \
 } while (0)
 
 #define UNLOCK(p) do { \
-	LOGD("%s(%d): %s: unlock\n", __FILE__, __LINE__, __func__); \
+	ALOGD("%s(%d): %s: unlock\n", __FILE__, __LINE__, __func__); \
 	pthread_mutex_unlock(p); \
 } while (0)
 
@@ -83,7 +82,8 @@ static int64_t list_get_rate(int sensor)
 	int64_t rate = NO_RATE;
 
 	for (j = 0; j < list[sensor].entry->nr; j++) {
-		if (list[sensor].entry->rate[j] < rate)
+		if ((list[sensor].entry->rate[j] >= 0) &&
+			(list[sensor].entry->rate[j] < (uint64_t)rate))
 			rate = list[sensor].entry->rate[j];
 	}
 
@@ -109,9 +109,9 @@ void sensors_wrapper_register(struct sensor_t *sensor,
 
 	if (sensor == NULL || api == NULL || entry == NULL) {
 		if (sensor == NULL)
-			LOGE("%s: Error sensor is NULL pointer", __func__);
+			ALOGE("%s: Error sensor is NULL pointer", __func__);
 		else
-			LOGE("%s: Error %s NULL pointer", __func__,
+			ALOGE("%s: Error %s NULL pointer", __func__,
 				sensor->name);
 		return;
 	}
@@ -143,7 +143,7 @@ void sensors_wrapper_data(struct sensor_data_t *sd)
 	while (sd->sensor != list[i].sensor) {
 		i++;
 		if (i >= idx) {
-			LOGE("%s: Error %s not found",
+			ALOGE("%s: Error %s not found",
 				__func__, sd->sensor->name);
 			return;
 		}
@@ -164,44 +164,52 @@ int sensors_wrapper_init(struct sensor_api_t *s)
 {
 	struct wrapper_desc *d = container_of(s, struct wrapper_desc, api);
 	int i;
-	int m;
-	int init;
-	int rv = 0;
+	int err = -1;
 
 	LOCK(&wrapper_mutex);
+scan:
 	for (i = 0; i < idx; i++) {
-		for (m = 0; m < d->access.m_nr; m++) {
-			if (list[i].sensor->type == d->access.match[m]) {
-				d->access.sensor[d->access.nr] = i;
-				d->access.client[d->access.nr] =
-							list[i].entry->nr;
+		if (list[i].sensor->type == d->access.match[d->access.nr]) {
+			int init, rv = 0;
+			ALOGV("%s: matched '%s' and '%s'", __func__,
+				d->sensor.name, list[i].sensor->name);
 
-				init = list_get_status(i, INIT);
+			d->access.sensor[d->access.nr] = i;
+			d->access.client[d->access.nr] = list[i].entry->nr;
 
-				if (!init)
-					rv = list[i].api->init(list[i].api);
+			init = list_get_status(i, INIT);
+			if (!init)
+				rv = list[i].api->init(list[i].api);
 
-				if (rv < 0) {
-					LOGE("%s: Error %s init failed",
-					__func__, list[i].sensor->name);
-				} else {
-					list_set_status(
-						d->access.sensor[d->access.nr],
-						d->access.client[d->access.nr],
-						INIT);
-				}
+			if (rv < 0) {
+				ALOGE("%s: '%s' init failed, continue search",
+				__func__, list[i].sensor->name);
+				err = rv;
+			} else {
+				list_set_status(
+					d->access.sensor[d->access.nr],
+					d->access.client[d->access.nr],
+					INIT);
+
 				list_set_api(d->access.sensor[d->access.nr],
 						d->access.client[d->access.nr],
 						&d->api);
 
 				list[i].entry->nr++;
 				d->access.nr++;
+
+				if (d->access.nr != d->access.m_nr) {
+					goto scan;
+				} else {
+					err = 0;
+					break;
+				}
 			}
 		}
 	}
 	UNLOCK(&wrapper_mutex);
 
-	return rv;
+	return err;
 }
 
 /* perfom activate for all sensors included in the access field, but it will

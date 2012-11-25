@@ -14,14 +14,25 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_SRC_FILES += 	sensors_module.c \
 			sensors_list.c \
-			sensors_fifo.c \
 			sensors_config.c \
+			sensors_fifo.c \
 			sensors_worker.c \
 			sensors_select.c \
 			sensors_wrapper.c \
+			sensors_input_cache.c \
+			sensors_sysfs.c \
 			sensors/sensor_util.c
 
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/sensors
+
+# Uncomment to enable debug
+#LOCAL_CFLAGS += -DDEBUG -UNDEBUG
+
+# Comment to enable debug
+#LOCAL_CFLAGS += -DLOG_NDEBUG
+
+# Set 1 to enable verbose debug
+LOCAL_CFLAGS += -DDEBUG_VERBOSE=0
 
 include $(LOCAL_PATH)/sensors/Sensors.mk
 LOCAL_SRC_FILES += $(patsubst %,sensors/%, $(DASH_SENSORS))

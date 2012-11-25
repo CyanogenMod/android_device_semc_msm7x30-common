@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Sony Ericsson Mobile Communications AB.
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <cutils/log.h>
 #include <linux/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -26,6 +25,7 @@
 #include <linux/input.h>
 #include <pthread.h>
 #include <errno.h>
+#include "sensors_log.h"
 #include "sensors_list.h"
 #include "sensors_fifo.h"
 #include "sensors_select.h"
@@ -33,7 +33,13 @@
 #include "sensors_id.h"
 #include "sensors_config.h"
 
-#include "akm8975.h"
+#if defined(AK8973)
+#include "../include/akm8973.h"
+#elif defined(AK8975)
+#include "../include/akm8975.h"
+#else
+#error No AKM chip is defined
+#endif
 
 #ifdef ACC_BMA150_INPUT
 int bma150_input_request_delay(int *handle, int64_t ns);
@@ -111,12 +117,12 @@ static int ak897x_read_axis(char *prefix, char *key, struct config_record *cr)
 			memcpy(cr->store, tmp, sizeof(tmp));
 			rc = 0;
 		} else {
-			LOGE("%s: bad config (%s_%s) [%2d %2d %2d]", __func__,
+			ALOGE("%s: bad config (%s_%s) [%2d %2d %2d]", __func__,
 					prefix, key, tmp[AXIS_X], tmp[AXIS_Y],
 					tmp[AXIS_Z]);
 		}
 	} else {
-		LOGE("%s: failed to read %s_%s", __func__, prefix, key);
+		ALOGE("%s: failed to read %s_%s", __func__, prefix, key);
 	}
 	return rc;
 }
@@ -126,7 +132,7 @@ static void ak897x_read_sensor_map(struct sensor_desc *d)
 	struct config_record rec;
 
 	if (!sensors_have_config_file()) {
-		LOGI("%s: No config file found. Using default config.",
+		ALOGI("%s: No config file found. Using default config.",
 		     __func__);
 		return;
 	}
@@ -141,9 +147,9 @@ static void ak897x_read_sensor_map(struct sensor_desc *d)
 	rec.store = d->sign;
 	ak897x_read_axis(d->map_prefix, "axis_sign", &rec);
 
-	LOGD("%s: %s: axis map [%2d %2d %2d]", __func__, d->sensor.name,
+	ALOGD("%s: %s: axis map [%2d %2d %2d]", __func__, d->sensor.name,
 	     d->map[AXIS_X], d->map[AXIS_Y], d->map[AXIS_Z]);
-	LOGD("%s: %s: axis sign [%2d %2d %2d]", __func__, d->sensor.name,
+	ALOGD("%s: %s: axis sign [%2d %2d %2d]", __func__, d->sensor.name,
 	     d->sign[AXIS_X], d->sign[AXIS_Y], d->sign[AXIS_Z]);
 }
 
@@ -158,7 +164,7 @@ static int ak897x_set_delay(struct sensor_api_t *s, int64_t ns)
 		int err;
 		err = sc->request_acc_delay(&sc->acc_handle, ns);
 		if (err)
-			LOGE("%s: unable to set accelerometer delay!\n", __func__);
+			ALOGE("%s: unable to set accelerometer delay!\n", __func__);
 	}
 	sc->select_worker.set_delay(&sc->select_worker, ns);
 
@@ -189,7 +195,7 @@ static int ak897x_init(struct sensor_api_t *s_api)
 	/* check for availablity */
 	fd = open_input_dev_by_name(sc->input_name, O_RDONLY | O_NONBLOCK);
 	if (fd < 0) {
-		LOGE("%s: unable to find %s input device!\n", __func__,
+		ALOGE("%s: unable to find %s input device!\n", __func__,
 			sc->input_name);
 		return -1;
 	}
@@ -228,7 +234,7 @@ static int ak897x_activate(struct sensor_api_t *s, int enable)
 		fd = open_input_dev_by_name(sc->input_name,
 						O_RDONLY | O_NONBLOCK);
 		if (fd < 0) {
-			LOGE("%s: Failed to open input device %s", __func__,
+			ALOGE("%s: Failed to open input device %s", __func__,
 				sc->input_name);
 			ret = -1;
 			goto exit;
@@ -247,7 +253,7 @@ static int ak897x_activate(struct sensor_api_t *s, int enable)
 		int err;
 		err = sc->request_acc_delay(&sc->acc_handle, 0);
 		if (err)
-			LOGE("%s: unable to set accelerometer delay!\n", __func__);
+			ALOGE("%s: unable to set accelerometer delay!\n", __func__);
 	}
 
 exit:
@@ -352,7 +358,7 @@ int dummy_acc_delay(int *handle, int64_t ns)
 static struct ak897x_sensor_composition ak897x_compass = {
 	.orientation = {
 		.sensor = {
-			name: "AKM897x Compass",
+			name: AKM_CHIP_NAME" Compass",
 			vendor: "Asahi Kasei Corp.",
 			version: sizeof(sensors_event_t),
 			handle: SENSOR_ORIENTATION_HANDLE,
@@ -374,7 +380,7 @@ static struct ak897x_sensor_composition ak897x_compass = {
 	},
 	.orientation_raw = {
 		.sensor = {
-			name: "AKM897x Compass Raw",
+			name: AKM_CHIP_NAME" Compass Raw",
 			vendor: "Asahi Kasei Corp.",
 			version: sizeof(sensors_event_t),
 			handle: SENSOR_ORIENTATION_RAW_HANDLE,
@@ -396,7 +402,7 @@ static struct ak897x_sensor_composition ak897x_compass = {
 	},
 	.magnetic = {
 		.sensor = {
-			name: "AKM897x Magnetic Field",
+			name: AKM_CHIP_NAME" Magnetic Field",
 			vendor: "Asahi Kasei Corp.",
 			version: sizeof(sensors_event_t),
 			handle: SENSOR_MAGNETIC_FIELD_HANDLE,
