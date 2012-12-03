@@ -119,7 +119,7 @@ static int set_light_buttons (struct light_device_t *dev, struct light_state_t c
 	pthread_mutex_lock(&g_lock);
 
 	for (i = 0; i < sizeof(BUTTON_BACKLIGHT_FILE)/sizeof(BUTTON_BACKLIGHT_FILE[0]); i++) {
-		write_int (BUTTON_BACKLIGHT_FILE[i], on ? rgb_to_brightness(state) : 0);
+		write_int (BUTTON_BACKLIGHT_FILE[i], on ? 255 : 0);
 	}
 
 	pthread_mutex_unlock(&g_lock);
