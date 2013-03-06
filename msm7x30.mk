@@ -49,8 +49,6 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/fstab.semc:root/fstab.semc \
     device/semc/msm7x30-common/prebuilt/postrecoveryboot.sh:root/sbin/postrecoveryboot.sh
 
-#    device/semc/msm7x30-common/prebuilt/fillers:root/fillers \
-
 #Audio
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
