@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2008 The Android Open Source Project
  * Copyright (C) 2011 Diogo Ferreira <defer@cyanogenmod.com>
- * Copyright (C) 2011 The CyanogenMod Project <http://www.cyanogenmod.com>
+ * Copyright (C) 2012 The CyanogenMod Project <http://www.cyanogenmod.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ static int set_light_backlight (struct light_device_t *dev, struct light_state_t
 
 	ALOGV("%s brightness=%d", __func__, brightness);
 	pthread_mutex_lock(&g_lock);
-	err = write_int (LCD_BACKLIGHT_FILE, brightness);
+	err |= write_int (LCD_BACKLIGHT_FILE, brightness);
 	pthread_mutex_unlock(&g_lock);
 	return err;
 }
@@ -137,7 +137,7 @@ static int set_light_keyboard(struct light_device_t* dev, struct light_state_t c
 }
 
 static void set_shared_light_locked (struct light_device_t *dev, struct light_state_t *state) {
-	int r, g, b;
+	int r, g, b, i;
 	int delayOn,delayOff;
 
 	r = (state->color >> 16) & 0xFF;
@@ -147,22 +147,21 @@ static void set_shared_light_locked (struct light_device_t *dev, struct light_st
 	delayOn = state->flashOnMS;
 	delayOff = state->flashOffMS;
 
-	if (state->flashMode != LIGHT_FLASH_NONE) {
-		write_string (RED_LED_FILE_TRIGGER, "timer");
-		write_string (GREEN_LED_FILE_TRIGGER, "timer");
-		write_string (BLUE_LED_FILE_TRIGGER, "timer");
+	switch (state->flashMode) {
+	case LIGHT_FLASH_TIMED:
+	case LIGHT_FLASH_HARDWARE:
+		for (i = 0; i < sizeof(LED_FILE_TRIGGER)/sizeof(LED_FILE_TRIGGER[0]); i++) {
+			write_string (LED_FILE_TRIGGER[i], "timer");
+			write_int (LED_FILE_DELAYON[i], delayOn);
+			write_int (LED_FILE_DELAYOFF[i], delayOff);
+		}
+		break;
 
-		write_int (RED_LED_FILE_DELAYON, delayOn);
-		write_int (GREEN_LED_FILE_DELAYON, delayOn);
-		write_int (BLUE_LED_FILE_DELAYON, delayOn);
-
-		write_int (RED_LED_FILE_DELAYOFF, delayOff);
-		write_int (GREEN_LED_FILE_DELAYOFF, delayOff);
-		write_int (BLUE_LED_FILE_DELAYOFF, delayOff);
-	} else {
-		write_string (RED_LED_FILE_TRIGGER, "none");
-		write_string (GREEN_LED_FILE_TRIGGER, "none");
-		write_string (BLUE_LED_FILE_TRIGGER, "none");
+	case LIGHT_FLASH_NONE:
+		for (i = 0; i < sizeof(LED_FILE_TRIGGER)/sizeof(LED_FILE_TRIGGER[0]); i++) {
+			write_string (LED_FILE_TRIGGER[i], "none");
+		}
+		break;
 	}
 
 	write_int (RED_LED_FILE, r);
@@ -171,11 +170,10 @@ static void set_shared_light_locked (struct light_device_t *dev, struct light_st
 }
 
 static void handle_shared_battery_locked (struct light_device_t *dev) {
-	if (is_lit (&g_notification)) {
+	if (is_lit (&g_notification))
 		set_shared_light_locked (dev, &g_notification);
-	} else {
+	else
 		set_shared_light_locked (dev, &g_battery);
-	}
 }
 
 static int set_light_battery (struct light_device_t *dev, struct light_state_t const* state) {
@@ -212,24 +210,18 @@ static int open_lights (const struct hw_module_t* module, char const* name,
 	int (*set_light)(struct light_device_t* dev,
 					 struct light_state_t const *state);
 
-	if (0 == strcmp(LIGHT_ID_BACKLIGHT, name)) {
+	if (0 == strcmp(LIGHT_ID_BACKLIGHT, name))
 		set_light = set_light_backlight;
-	}
-	else if (0 == strcmp(LIGHT_ID_KEYBOARD, name)) {
+	else if (0 == strcmp(LIGHT_ID_KEYBOARD, name))
 		set_light = set_light_keyboard;
-	}
-	else if (0 == strcmp(LIGHT_ID_BUTTONS, name)) {
+	else if (0 == strcmp(LIGHT_ID_BUTTONS, name))
 		set_light = set_light_buttons;
-	}
-	else if (0 == strcmp(LIGHT_ID_BATTERY, name)) {
+	else if (0 == strcmp(LIGHT_ID_BATTERY, name))
 		set_light = set_light_battery;
-	}
-	else if (0 == strcmp(LIGHT_ID_NOTIFICATIONS, name)) {
+	else if (0 == strcmp(LIGHT_ID_NOTIFICATIONS, name))
 		set_light = set_light_notifications;
-	}
-	else {
+	else
 		return -EINVAL;
-	}
 
 	pthread_once (&g_init, init_globals);
 	struct light_device_t *dev = malloc(sizeof (struct light_device_t));
