@@ -152,4 +152,5 @@ PRODUCT_PROPERTY_OVERRIDES += \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
     persist.sys.usb.config=mass_storage \
+    sys.mem.max_hidden_apps=3 \
     debug.camcorder.disablemeta=1
