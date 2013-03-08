@@ -21,8 +21,7 @@ DEVICE_PACKAGE_OVERLAYS += device/semc/msm7x30-common/overlay
 
 $(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
 
-PRODUCT_MANUFACTURER := Sony
-
+# These are the common hardware-specific features
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
@@ -34,9 +33,9 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
     frameworks/native/data/etc/android.hardware.touchscreen.xml:system/etc/permissions/android.hardware.touchscreen.xml \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.distinct.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.distinct.xml \
-    frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
-    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
+    frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml
 
+# Common device specific configs
 PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/media_profiles.xml:system/etc/media_profiles.xml \
     device/semc/msm7x30-common/prebuilt/media_codecs.xml:system/etc/media_codecs.xml \
@@ -49,13 +48,13 @@ PRODUCT_COPY_FILES += \
     device/semc/msm7x30-common/prebuilt/fstab.semc:root/fstab.semc \
     device/semc/msm7x30-common/prebuilt/postrecoveryboot.sh:root/sbin/postrecoveryboot.sh
 
-#Audio
+# Audio
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
     audio.primary.msm7x30 \
     audio_policy.msm7x30
 
-#Gralloc
+# Graphics
 PRODUCT_PACKAGES += \
     gralloc.msm7x30 \
     copybit.msm7x30 \
@@ -65,7 +64,7 @@ PRODUCT_PACKAGES += \
     libmemalloc \
     liboverlay
 
-#Hal
+# Hal
 PRODUCT_PACKAGES += \
     power.semc \
     gps.semc \
@@ -82,18 +81,16 @@ PRODUCT_PACKAGES += \
     libmm-omxcore \
     libdivxdrmdecrypt
 
-#Misc
+# Misc
 PRODUCT_PACKAGES += \
     com.android.future.usb.accessory \
     LegacyCamera \
     Torch
 
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.tethering.kb_disconnect=1
-
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
 
+# Common device properties
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.opengles.version=131072 \
     rild.libpath=/system/lib/libril-qc-1.so \
@@ -110,6 +107,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.product.locale.region=US \
     persist.ro.ril.sms_sync_sending=1 \
     ro.use_data_netmgrd=true \
+    ro.tethering.kb_disconnect=1 \
     com.qc.hardware=true \
     debug.sf.hw=1 \
     debug.composition.type=gpu \

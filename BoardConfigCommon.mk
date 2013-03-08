@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 USE_CAMERA_STUB := true
 TARGET_SPECIFIC_HEADER_PATH := device/semc/msm7x30-common/include
 
@@ -75,6 +76,7 @@ BOARD_UMS_LUNFILE := "/sys/devices/platform/msm_hsusb/gadget/lun0/file"
 TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/msm_hsusb/gadget/lun0/file"
 BOARD_SDCARD_INTERNAL_DEVICE := /dev/block/mmcblk0p1
 
+# Kernel
 BOARD_KERNEL_CMDLINE := console=null
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_RECOVERY_BASE := 0x00200000
