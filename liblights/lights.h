@@ -3,8 +3,8 @@ char const*const GREEN_LED_FILE = "/sys/class/leds/green/brightness";
 char const*const BLUE_LED_FILE 	= "/sys/class/leds/blue/brightness";
 
 char const*const LED_FILE_TRIGGER[] = {
- "/sys/class/leds/red/trigger"
- "/sys/class/leds/green/trigger"
+ "/sys/class/leds/red/trigger",
+ "/sys/class/leds/green/trigger",
  "/sys/class/leds/blue/trigger"
 };
 
