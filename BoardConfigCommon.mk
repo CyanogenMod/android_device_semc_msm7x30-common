@@ -85,5 +85,9 @@ BOARD_RECOVERY_BASE := 0x00200000
 TARGET_BOOTANIMATION_PRELOAD := true
 TARGET_BOOTANIMATION_TEXTURE_CACHE := true
 
+# Light sensor
+SOMC_CFG_SENSORS_LIGHT_AS3676 := yes
+SOMC_CFG_SENSORS_LIGHT_AS3676_PATH := "/sys/devices/i2c-0/0-0040/adc_als_value"
+
 # A custom ota package maker for a device without an exposed boot partition
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/semc/msm7x30-common/releasetools/semc_ota_from_target_files
