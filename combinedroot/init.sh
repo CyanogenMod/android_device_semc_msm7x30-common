@@ -33,7 +33,12 @@ busybox mount -t yaffs2 ${BOOTREC_CACHE} /cache
 busybox echo 255 > ${BOOTREC_LED_RED}
 busybox echo 0 > ${BOOTREC_LED_GREEN}
 busybox echo 255 > ${BOOTREC_LED_BLUE}
-busybox echo 255 > ${BOOTREC_LED_BUTTONS}
+if [ -n "${BOOTREC_LED_BUTTONS}" ]; then
+	busybox echo 255 > ${BOOTREC_LED_BUTTONS}
+fi
+if [ -n "${BOOTREC_LED_BUTTONS2}" ]; then
+	busybox echo 255 > ${BOOTREC_LED_BUTTONS2}
+fi
 
 # keycheck
 busybox cat ${BOOTREC_EVENT} > /dev/keycheck&
@@ -51,7 +56,12 @@ then
 	busybox echo 0 > ${BOOTREC_LED_RED}
 	busybox echo 0 > ${BOOTREC_LED_GREEN}
 	busybox echo 255 > ${BOOTREC_LED_BLUE}
-	busybox echo 0 > ${BOOTREC_LED_BUTTONS}
+	if [ -n "${BOOTREC_LED_BUTTONS}" ]; then
+		busybox echo 0 > ${BOOTREC_LED_BUTTONS}
+	fi
+	if [ -n "${BOOTREC_LED_BUTTONS2}" ]; then
+		busybox echo 0 > ${BOOTREC_LED_BUTTONS2}
+	fi
 	# framebuffer fix
 	busybox echo 0 > /sys/module/msm_fb/parameters/align_buffer
 	# recovery ramdisk
@@ -62,7 +72,12 @@ else
 	busybox echo 0 > ${BOOTREC_LED_RED}
 	busybox echo 0 > ${BOOTREC_LED_GREEN}
 	busybox echo 0 > ${BOOTREC_LED_BLUE}
-	busybox echo 0 > ${BOOTREC_LED_BUTTONS}
+	if [ -n "${BOOTREC_LED_BUTTONS}" ]; then
+		busybox echo 0 > ${BOOTREC_LED_BUTTONS}
+	fi
+	if [ -n "${BOOTREC_LED_BUTTONS2}" ]; then
+		busybox echo 0 > ${BOOTREC_LED_BUTTONS2}
+	fi
 	# framebuffer fix
 	busybox echo 1 > /sys/module/msm_fb/parameters/align_buffer
 fi
