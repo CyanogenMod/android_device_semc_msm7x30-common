@@ -29,6 +29,9 @@ busybox mount -t proc proc /proc
 busybox mount -t sysfs sysfs /sys
 busybox mount -t yaffs2 ${BOOTREC_CACHE} /cache
 
+# execute pre_hw_config.sh to set max current
+busybox sh pre_hw_config.sh
+
 # trigger amber LED & button-backlight
 busybox echo 255 > ${BOOTREC_LED_RED}
 busybox echo 0 > ${BOOTREC_LED_GREEN}
