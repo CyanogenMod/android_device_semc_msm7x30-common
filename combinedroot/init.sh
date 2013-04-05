@@ -29,14 +29,21 @@ busybox mount -t proc proc /proc
 busybox mount -t sysfs sysfs /sys
 busybox mount -t yaffs2 ${BOOTREC_CACHE} /cache
 
-# execute pre_hw_config.sh to set max current
-busybox sh pre_hw_config.sh
+# leds & backlight configuration
+busybox echo ${BOOTREC_LED_RED_CURRENT} > ${BOOTREC_LED_RED}/max_current
+busybox echo ${BOOTREC_LED_GREEN_CURRENT} > ${BOOTREC_LED_GREEN}/max_current
+busybox echo ${BOOTREC_LED_BLUE_CURRENT} > ${BOOTREC_LED_BLUE}/max_current
+busybox echo ${BOOTREC_LED_BUTTONS_CURRENT} > ${BOOTREC_LED_BUTTONS}/max_current
+busybox echo ${BOOTREC_LED_BUTTONS2_CURRENT} > ${BOOTREC_LED_BUTTONS2}/max_current
+busybox echo ${BOOTREC_LED_LCD_CURRENT} > ${BOOTREC_LED_LCD}/max_current
+busybox echo ${BOOTREC_LED_LCD_MODE} > ${BOOTREC_LED_LCD}/mode
 
 # trigger amber LED & button-backlight
-busybox echo 255 > ${BOOTREC_LED_RED}
-busybox echo 0 > ${BOOTREC_LED_GREEN}
-busybox echo 255 > ${BOOTREC_LED_BLUE}
-busybox echo 255 > ${BOOTREC_LED_BUTTONS}
+busybox echo 255 > ${BOOTREC_LED_RED}/brightness
+busybox echo 0 > ${BOOTREC_LED_GREEN}/brightness
+busybox echo 255 > ${BOOTREC_LED_BLUE}/brightness
+busybox echo 255 > ${BOOTREC_LED_BUTTONS}/brightness
+busybox echo 255 > ${BOOTREC_LED_BUTTONS2}/brightness
 
 # keycheck
 busybox cat ${BOOTREC_EVENT} > /dev/keycheck&
@@ -51,10 +58,11 @@ then
 	busybox echo 'RECOVERY BOOT' >>boot.txt
 	busybox rm -fr /cache/recovery/boot
 	# trigger blue led
-	busybox echo 0 > ${BOOTREC_LED_RED}
-	busybox echo 0 > ${BOOTREC_LED_GREEN}
-	busybox echo 255 > ${BOOTREC_LED_BLUE}
-	busybox echo 0 > ${BOOTREC_LED_BUTTONS}
+	busybox echo 0 > ${BOOTREC_LED_RED}/brightness
+	busybox echo 0 > ${BOOTREC_LED_GREEN}/brightness
+	busybox echo 255 > ${BOOTREC_LED_BLUE}/brightness
+	busybox echo 0 > ${BOOTREC_LED_BUTTONS}/brightness
+	busybox echo 0 > ${BOOTREC_LED_BUTTONS2}/brightness
 	# framebuffer fix
 	busybox echo 0 > /sys/module/msm_fb/parameters/align_buffer
 	# recovery ramdisk
@@ -62,10 +70,11 @@ then
 else
 	busybox echo 'ANDROID BOOT' >>boot.txt
 	# poweroff LED & button-backlight
-	busybox echo 0 > ${BOOTREC_LED_RED}
-	busybox echo 0 > ${BOOTREC_LED_GREEN}
-	busybox echo 0 > ${BOOTREC_LED_BLUE}
-	busybox echo 0 > ${BOOTREC_LED_BUTTONS}
+	busybox echo 0 > ${BOOTREC_LED_RED}/brightness
+	busybox echo 0 > ${BOOTREC_LED_GREEN}/brightness
+	busybox echo 0 > ${BOOTREC_LED_BLUE}/brightness
+	busybox echo 0 > ${BOOTREC_LED_BUTTONS}/brightness
+	busybox echo 0 > ${BOOTREC_LED_BUTTONS2}/brightness
 	# framebuffer fix
 	busybox echo 1 > /sys/module/msm_fb/parameters/align_buffer
 fi
