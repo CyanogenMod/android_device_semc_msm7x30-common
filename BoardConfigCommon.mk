@@ -52,9 +52,6 @@ BOARD_HAVE_BLUETOOTH := true
 TARGET_FORCE_CPU_UPLOAD := true
 ENABLE_WEBGL := true
 
-# Sensors
-SOMC_CFG_DASH_INCLUDED := yes
-
 # GPS
 BOARD_VENDOR_QCOM_AMSS_VERSION := 50000
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := semc
@@ -88,6 +85,7 @@ TARGET_BOOTANIMATION_TEXTURE_CACHE := true
 # Light sensor
 SOMC_CFG_SENSORS_LIGHT_AS3676 := yes
 SOMC_CFG_SENSORS_LIGHT_AS3676_PATH := "/sys/devices/i2c-0/0-0040/adc_als_value"
+SOMC_CFG_SENSORS_LIGHT_AS3676_MAXRANGE := 13000
 
 # A custom ota package maker for a device without an exposed boot partition
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/semc/msm7x30-common/releasetools/semc_ota_from_target_files
