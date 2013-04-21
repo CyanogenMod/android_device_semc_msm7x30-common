@@ -118,3 +118,5 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mtp \
     sys.mem.max_hidden_apps=10 \
     debug.camcorder.disablemeta=1
+
+$(call inherit-product-if-exists, vendor/semc/msm7x30-common/msm7x30-common-vendor.mk)
